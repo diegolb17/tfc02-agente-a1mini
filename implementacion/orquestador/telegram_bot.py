@@ -27,6 +27,7 @@ def _teclado(botones):
 class Telegram:
     def __init__(self, token: str, operador_id: int | None, al_registrar=None):
         self.url = f"https://api.telegram.org/bot{token}/"
+        self._token = token
         self.operador_id = operador_id
         self.al_registrar = al_registrar     # solo en el modo de registro del operador
         self._parar = threading.Event()
@@ -99,7 +100,8 @@ class Telegram:
                                          offset=desplazamiento,
                                          allowed_updates=json.dumps(["message", "callback_query"]))
             except Exception as error:      # red caida: se reintenta sin detener el sistema
-                log.warning("getUpdates fallo: %s", error)
+                # Las excepciones de requests traen la URL con el token: se oculta antes de registrar.
+                log.warning("getUpdates fallo: %s", str(error).replace(self._token, "***"))
                 time.sleep(5)
                 continue
             for novedad in novedades:

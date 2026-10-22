@@ -224,19 +224,23 @@ COMPONENTES_COMERCIALES = [
     (25, 'Dicroico LED MR16 GU5.3, 12 V, 6 W', 1, 'comercial'),
     (26, 'Entrada IEC 60320 C14 con interruptor y fusible', 1, 'comercial'),
     (27, 'Botón de emergencia Ø22, contacto NC', 1, 'comercial'),
-    (28, 'Inserto roscado de latón M4 x 10 (agujeros Ø5.6)', 38, 'comercial'),
+    # 22 oct 2026 (P12): longitudes calculadas con el espesor apretado de cada unión y el inserto de 10 mm
+    # (enganche de 6 a 10 mm, punta dentro del alojamiento); el detalle está en el Anexo G.
+    (28, 'Inserto roscado de latón M4 x 10 (agujeros Ø5.6)', 35, 'comercial'),
     (29, 'Inserto de latón M3: 8 de 4 mm y 3 de 3 mm', 11, 'comercial'),
-    (30, 'Tornillo M4 x 60 con tuerca y arandela (ventilador)', 4, 'comercial'),
-    (31, 'Tornillo M4 x 14 (tapa del actuador)', 4, 'comercial'),
-    (32, 'Tornillo M4 de unión de cuartos y módulos', 34, 'longitud s/c'),
-    (33, 'Tornillo M3 x 16 (soporte de la cámara, a insertos)', 4, 'comercial'),
-    (34, 'Tornillo M3 (rejillas de admisión y extractor)', 8, 'longitud s/c'),
-    (35, 'Prisionero M3 (rótulas)', 3, 'longitud s/c'),
-    (36, 'Prisionero M3 autorroscante (aro portalámpara)', 1, 'longitud s/c'),
-    (37, 'Almohadilla de elastómero bajo la bandeja', 4, 'por especificar'),
-    (38, 'Material amortiguador entre impresora y cavidad', 1, 'por especificar'),
-    (39, 'Pasador del agujero posterior del actuador', 1, 'por especificar'),
-    (40, 'Pasador de alineación Ø5 entre cuartos (agujeros Ø5)', 16, 'por especificar'),
+    (30, 'ISO 4762 M4 x 60, tuerca ISO 4032 y arandela ISO 7089 (ventilador)', 4, 'apriete 50'),
+    (31, 'ISO 4762 M4 x 25: uniones entre cuartos y soporte del ventilador', 18, 'apriete 15 a 18'),
+    (32, 'ISO 4762 M4 x 12: estructura a bandeja y tapa del actuador', 12, 'apriete 4.3 a 5.5'),
+    (33, 'ISO 4762 M4 x 30: soporte del actuador a la estructura', 4, 'apriete 24'),
+    (34, 'ISO 4762 M4 x 55: eje del agujero posterior del actuador', 1, 'MEC-1-05'),
+    (35, 'ISO 4762 M3 x 16: soporte de la cámara, a insertos M3 x 4', 4, 'apriete 10'),
+    (36, 'ISO 7380-1 M3 x 8: rejillas de admisión, a insertos M3 x 4', 4, 'apriete 4'),
+    (37, 'ISO 7045 M3 x 20 con tuerca ISO 4032: extractor', 4, 'pared 4 + 10'),
+    (38, 'Prisionero ISO 4029 M3: 2 de 4 mm (tubo) y 1 de 5 mm (copa)', 3, 'rótulas'),
+    (39, 'Prisionero ISO 4029 M3 x 3 autorroscante (aro, piloto Ø2.5)', 1, 'pared 2.7'),
+    (40, 'Pasador ISO 2338 Ø5 m6 x 28 (alineación entre cuartos)', 16, 'agujeros 30'),
+    (41, 'Almohadilla de neopreno 60 Shore A, Ø25 x 5, adhesiva', 8, 'bajo la bandeja'),
+    (42, 'Lámina de neopreno 60 Shore A de 5 mm: tiras 195 x 5 y 315 x 5', 1, 'cavidad'),
 ]
 
 
@@ -255,10 +259,10 @@ def mec_0_02(codigo, nombre, titulo):
     titulo_vista(lam, (zona[0] + zona[2]) / 2, 34, 'ISOMÉTRICA EXPLOSIONADA DEL CONJUNTO (sin el equipo)', esc)
     filas, total = filas_bom(items)
     filas.append(('', 'MASA TOTAL DE FABRICACIÓN PROPIA', '', '', '%.0f' % total, ''))
-    y_top = lista_piezas(lam, 248, 72, filas, alto=5.0)
+    y_top = lista_piezas(lam, 248, 70, filas, alto=4.8)
     # componentes comerciales, sobre la lista de piezas
-    col = [('POS', 10, 'c'), ('COMPONENTE COMERCIAL', 104, 'l'), ('CANT', 14, 'c'), ('OBSERVACIÓN', 32, 'c')]
-    alto_c = 4.15     # 21 oct: con la fila del pasador de alineacion la lista tocaba el marco superior
+    col = [('POS', 10, 'c'), ('COMPONENTE COMERCIAL', 108, 'l'), ('CANT', 12, 'c'), ('OBSERVACIÓN', 30, 'c')]
+    alto_c = 3.85     # 22 oct: la tornillería con longitud añadió dos filas; con 4.15 la lista tocaba el marco superior
     base_c = y_top + 9
     lam.texto(248, base_c + alto_c * (len(COMPONENTES_COMERCIALES) + 1) + 2, 'COMPONENTES COMERCIALES (no se fabrican)', 2.6, 0, 'l', negrita=True)
     tabla(lam, 248, base_c, col, COMPONENTES_COMERCIALES, alto=alto_c, tam=2.8)
@@ -287,16 +291,127 @@ def _subconjunto(codigo, titulo, posiciones, dir_iso, escala, notas, iso_centro=
     return _fn
 
 
-_subconjunto('MEC-1-01', 'SUBCONJUNTO DE LA ESTRUCTURA INCLINADA', (1, 2, 3, 4), (1, -1, -0.7), 0.5, iso_centro=(135, 190), tabla_pos=(248, 150), notas_pos=(248, 215),
-             notas=['Los cuatro cuartos se unen con tornillos M4 sobre insertos roscados de latón M4 x 10.',
-              'Plano superior inclinado 20° respecto de la mesa; cada cuarto cabe en el volumen de impresión de 180 mm.'])
+# -----------------------------------------------------------------------------
+# 22 oct 2026 (P12): interfaz con la impresora. La cavidad se mide en el marco de la impresora, el del modelo
+# Equipo_A1mini: x a lo largo de la pendiente, y transversal, z normal a la cara inclinada.
+R20, T20 = transform_ensamble('Equipo_A1mini')
+
+
+def s20(xl, yl, zl):
+    """Punto del marco de la impresora llevado a coordenadas del ensamble (mm)."""
+    return tuple(R20 @ np.array([xl, yl, zl], float) + T20)
+
+
+# caras interiores de la pared de retención (x 12), del nervio posterior (x 333) y de las paredes laterales
+# (y 127 y 328); suelo a z -5, borde superior a z 0, suelo de 4 mm (z -9 a -5)
+CAV = (12.0, 333.0, 127.0, 328.0)
+BASE_A1 = (17.0, 332.0, 128.0, 323.0)              # base de la A1 mini en el modelo, apoyada en z -5
+TABIQUES = (0.0, 81.05, 162.1, 243.14, 320.19, 324.19)   # caras de los tabiques verticales que apoyan el suelo (X)
+
+
+def _fantasma(lam, v, pts):
+    for a, b in zip(pts[:-1], pts[1:]):
+        lam.linea(v.m(a), v.m(b), 'fantasma')
+
+
+@lamina('MEC-1-01', 'Sub', 'SUBCONJUNTO DE LA ESTRUCTURA INCLINADA')
+def mec_1_01(codigo, nombre, titulo):
+    from motor.hoja import cota_alineada, traza, marca_detalle
+    items = [p for p in PIEZAS if p[0] in (1, 2, 3, 4)]
+    pz = conjunto([p[1] for p in items])
+    lam = Lamina('A3')
+    # --- isométrica con globos, arriba a la izquierda
+    zona = (18, 182, 212, 286)
+    e, esc = escala_que_cabe(pz, (1, -1, -0.7), zona, 12)
+    v = Vista(pz, (1, -1, -0.7), Z, e, ocultas=False, nombre='iso', res=0.15)
+    v.colocar_centro((zona[0] + zona[2]) / 2, (zona[1] + zona[3]) / 2 + 3)
+    v.dibujar(lam)
+    globos_auto(lam, v, items, margen=9, pz=pz)
+    titulo_vista(lam, (zona[0] + zona[2]) / 2, zona[1] - 3, 'ISOMÉTRICA DEL SUBCONJUNTO', esc)
+
+    # --- corte A-A por la cavidad (Y 290), mirando hacia +Y
+    yA = 290.0
+    va = Vista(pz, Y, Z, 1 / 3.0, ocultas=False, corte=((0, yA, 0), (0, 1, 0)), nombre='corteA', res=0.12)
+    va.colocar_punto((0, yA, 0), x=44, y=95)
+    va.dibujar(lam)
+    xa, xb = BASE_A1[0], BASE_A1[1]
+    _fantasma(lam, va, [s20(xa, yA, 40), s20(xa, yA, -5), s20(xb, yA, -5), s20(xb, yA, 40)])
+    textos = ('81.05', '81.05', '81.04', '77.05', '4')
+    for (a_, b_), t_ in zip(zip(TABIQUES[:-1], TABIQUES[1:]), textos):
+        cota(lam, va, (a_, yA, 0), (b_, yA, 0), va.rect[1] - 7, 'h', texto=t_)
+    cota(lam, va, (0, yA, 0), (4, yA, 0), va.rect[1] - 14, 'h', texto='4')
+    nota(lam, va, s20(170, yA, -5), ['BASE DE LA A1 MINI', '(línea de trazo y dos puntos)'], 22, 30, tam=2.8)
+    # sentido de la vista B, normal a la cara inclinada
+    p1, p2 = np.array(va.m(s20(255, yA, 34))), np.array(va.m(s20(255, yA, 6)))
+    u = (p2 - p1) / np.linalg.norm(p2 - p1)
+    lam.linea(tuple(p1), tuple(p2 - u * 1.0), 'cota')
+    lam.flecha(tuple(p2), tuple(u), largo=3.0, ancho=1.1)
+    lam.texto(p1[0] - 2.5, p1[1] + 1.0, 'B', 4.0, 0, 'c', negrita=True)
+    marca_detalle(lam, va, s20(10, yA, -3), 5.5, 'C', ang=200)
+    marca_detalle(lam, va, s20(334, yA, -3), 5.5, 'D', ang=20)
+    titulo_vista(lam, (va.rect[0] + va.rect[2]) / 2, va.rect[1] - 24, 'CORTE A-A', '1:3')
+
+    # --- detalles C y D a 1:1 (pared de retención y nervio posterior)
+    def detalle(pieza, c3, letra, cx, cy, r=18):
+        d = Vista(Pieza(pieza), Y, Z, 1.0, ocultas=False, corte=((0, yA, 0), (0, 1, 0)), nombre='det', res=0.06)
+        d.recortar(c3, r)
+        d.colocar_punto(c3, x=cx, y=cy)
+        d.dibujar(lam)
+        titulo_vista(lam, cx, cy - r - 7, 'DETALLE %s' % letra, '1:1')
+        return d
+    dc = detalle('Cuna_frontal_izquierda', s20(16, yA, -4), 'C', 205, 147)
+    _fantasma(lam, dc, [s20(xa, yA, 9), s20(xa, yA, -5), s20(xa + 14, yA, -5)])
+    cota_alineada(lam, dc, s20(14.5, yA, -5), s20(14.5, yA, 0), -9, texto='5')
+    cota_alineada(lam, dc, s20(21, yA, -9), s20(21, yA, -5), -4, texto='4')
+    cota_alineada(lam, dc, s20(CAV[0], yA, 0), s20(xa, yA, 0), 7, texto='5')
+    nota(lam, dc, s20(6, yA, -1), 'PARED DE RETENCIÓN', -10, 15, tam=2.8)
+    dd = detalle('Cuna_posterior_izquierda', s20(332, yA, -4), 'D', 205, 98)
+    _fantasma(lam, dd, [s20(xb - 14, yA, -5), s20(xb, yA, -5), s20(xb, yA, 9)])
+    cota_alineada(lam, dd, s20(330.5, yA, -5), s20(330.5, yA, 0), 9, texto='5')
+    cota_alineada(lam, dd, s20(CAV[1], yA, 0), s20(337, yA, 0), 7, texto='4')
+    nota(lam, dd, s20(335, yA, -1), 'NERVIO POSTERIOR', 8, 14, tam=2.8)
+
+    # --- vista B, normal a la cara inclinada: la cavidad en verdadera magnitud
+    dB = R20 @ np.array([0, 0, -1.0])
+    uB = R20 @ np.array([1.0, 0, 0])
+    vb = Vista(pz, dB, uB, 0.25, ocultas=False, nombre='vistaB', res=0.2)
+    vb.colocar_centro(332, 146)
+    vb.dibujar(lam)
+    x0c, x1c, y0c, y1c = CAV
+    cota(lam, vb, s20(x0c, y1c, 0), s20(x1c, y1c, 0), vb.rect[0] - 8, 'v', texto='321')
+    cota(lam, vb, s20(x0c, y0c, 0), s20(x0c, y1c, 0), vb.rect[1] - 15, 'h', texto='201')
+    bx0, bx1, by0, by1 = BASE_A1
+    _fantasma(lam, vb, [s20(bx0, by0, -5), s20(bx1, by0, -5), s20(bx1, by1, -5), s20(bx0, by1, -5), s20(bx0, by0, -5)])
+    cota(lam, vb, s20(bx0, by0, -5), s20(bx1, by0, -5), vb.rect[2] + 8, 'v', texto='315')
+    cota(lam, vb, s20(bx1, by0, -5), s20(bx1, by1, -5), vb.rect[3] + 15, 'h', texto='195')
+    traza(lam, vb, (150, yA, 100), (0, 1, 0), (0, 1, 0), 'A')
+    titulo_vista(lam, 332, vb.rect[1] - 25, 'VISTA B', '1:4')
+
+    filas, total = filas_bom(items)
+    filas.append(('', 'MASA DEL SUBCONJUNTO', '', '', '%.0f' % total, ''))
+    lista_piezas(lam, 248, 252, filas, alto=5.2)
+    notas = ['Cuartos unidos con tornillos ISO 4762 M4 x 25 sobre insertos de latón M4 x 10 y alineados con '
+             'pasadores ISO 2338 Ø5 x 28; plano superior inclinado 20°.',
+             'Cavidad de la impresora: 321 x 201 entre la pared de retención, el nervio posterior y las paredes '
+             'laterales; suelo 5 mm bajo el borde, de 4 mm, sobre cinco tabiques verticales.',
+             'La base de la A1 mini (315 x 195) queda a 5 mm de la pared de retención y de la pared izquierda, '
+             'huecos que ocupan tiras de neopreno de 5 mm (MEC-0-02), y a 1 mm del nervio y de la pared derecha.']
+    lam.estampar(_ensamble_datos(codigo, titulo, esc), notas, notas_pos=(228, 244))
+    return lam
+
+
 _subconjunto('MEC-1-02', 'SUBCONJUNTO DE LA BANDEJA', (5, 6, 7, 8, 11, 12, 13, 14), (1, -1, -0.7), 0.5, iso_centro=(135, 190), tabla_pos=(248, 128), notas_pos=(248, 215),
              notas=['La bandeja apoya sobre la mesa y recibe la estructura; las rejillas cierran la admisión frontal.',
               'El soporte del actuador va en la esquina frontal izquierda, bajo la plataforma, y aloja el actuador lineal.',
-              'La bandeja posterior derecha lleva la ventana del módulo de entrada de red X1 (ELE-0-01).'])
+              'La bandeja posterior derecha lleva la ventana del módulo de entrada de red X1 (ELE-0-01).',
+              'Ocho almohadillas de neopreno Ø25 x 5 bajo la bandeja (MEC-0-02): cuatro en las esquinas y cuatro en el '
+              'centro de los lados, con el centro a 20 mm de los bordes.'])
 _subconjunto('MEC-1-03', 'SUBCONJUNTO DE ENFRIAMIENTO', (9, 10), (1, -1, -0.7), 0.5,
              ['Ventilador axial de 92 mm (comercial, MEC-0-02) en el soporte; el ducto forma la cuchilla de aire sobre la cama.',
               'El módulo apoya en la bahía lateral de la estructura y se retira sin desmontar otras piezas.'])
 _subconjunto('MEC-1-04', 'SUBCONJUNTO DE VISIÓN E ILUMINACIÓN', (15, 16, 17, 18, 19), (1, -1, -0.6), 0.5,
              ['Soporte perpendicular al plano inclinado de la cuna posterior derecha; cámara ESP32-CAM y dicroico MR16 sobre rótulas de bola.',
               'Objetivo a 123 mm sobre la placa y 214 mm de su centro; el aro de la lámpara queda fuera del encuadre de la cámara.'])
+
+
+import mecanismo  # noqa: E402,F401  (registra MEC-1-05)
