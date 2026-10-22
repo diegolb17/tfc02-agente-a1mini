@@ -1,0 +1,44 @@
+% Diagrama 5. Accionamiento del actuador lineal (etapas 2 y 3), en TikZ.
+% Equivale a D5_accionamiento_actuador.mmd. (P) = propuesto.
+% Compilar: pdflatex D5_accionamiento_actuador_tikz.tex
+\documentclass[border=4pt]{standalone}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish,es-noshorthands]{babel}
+\usepackage{times}
+\usepackage{amssymb}
+\usepackage{tikz}
+\input{estilo_diagramas}
+
+\begin{document}
+\begin{tikzpicture}[base, bl/.style={proc, minimum height=1.3cm}]
+% camino de mando
+\node[bl, text width=2.35cm] (PI)  at (0,0)     {\textbf{Raspberry Pi Zero 2 W}\\orden de flexión con confianza alta o autorización};
+\node[bl, text width=2.6cm]  (MCU) at (3.95,0)  {\textbf{ESP32 DevKit}\\extensión hasta 35 mm por posición (6.9 s); corte si no avanza o a los 12 s};
+\node[bl, text width=2.2cm]  (DRV) at (7.85,0)  {\textbf{DRV8871}\\módulo, puente completo};
+\node[bl, text width=2.9cm]  (ACT) at (11.75,0) {\textbf{Actuonix L12-50-210-12-P}\\62 N en máxima potencia, 5.1 mm/s en servicio, carrera 50 mm};
+\node[bl, text width=2.1cm]  (LAM) at (15.45,0) {\textbf{Lámina PEI}\\flecha de trabajo 30 mm};
+
+\draw[fl] (PI) -- node[et, above] {UART} node[et, below] {TX2/RX2} (MCU);
+\draw[fl] (MCU) -- node[et, above] {D25: IN1} node[et, below] {D26: IN2} (DRV);
+\draw[fl] (DRV) -- node[et, above] {OUT1, OUT2} node[et, below] {por J4} (ACT);
+\draw[fl] (ACT) -- node[et, above] {vástago} (LAM);
+\draw[fl, dashed] ($(ACT.north)+(0.6,0)$) -- ++(0,0.45) -| node[et, above, pos=0.1] {potenciómetro (3.3 V): cursor a D34} ($(MCU.north)+(0.6,0)$);
+
+% limitación de corriente, pendiente
+\node[negra, text width=4.2cm] (R3) at (7.85,2.55) {R3 56 k$\Omega$ en ILIM: solo respaldo ante un cortocircuito; el bloqueo se detecta por la posición};
+\draw[fl, dashed] (R3) -- (DRV);
+
+% alimentación y botón de emergencia
+\node[bl, text width=2.35cm] (SETA) at (0,-2.6)  {\textbf{Botón de emergencia NC} (J2)\\ISO 13850, apertura positiva};
+\node[bl, text width=2.0cm]  (BUS)  at (3.95,-2.6) {\textbf{+24V\_ACT}\\riel tras el botón de emergencia};
+\node[bl, text width=2.2cm]  (BUCK) at (7.85,-2.6) {\textbf{LM2596}\\reductor a 12 V};
+\draw[fl] (SETA) -- (BUS);
+\draw[fl] (BUS) -- (BUCK);
+\draw[fl] (BUCK) -- node[et, right=1pt, align=left] {VM\\C3 100 $\mu$F} (DRV);
+\draw[fl, dashed] (SETA.north) -- node[et, left=1pt, pos=0.5, align=right] {divisor R7/R8\\a D35} ++(0,0.9) -| ($(MCU.south)+(-0.6,0)$);
+
+% tabla de verdad
+\node[nota, text width=5.0cm] at (13.3,-2.6) {\textbf{Tabla de verdad del DRV8871}\\IN1 = 1, IN2 = 0: un sentido\\IN1 = 0, IN2 = 1: sentido opuesto\\0, 0: libre;\ \ 1, 1: freno\\Sentido de extensión por fijar en el montaje};
+\end{tikzpicture}
+\end{document}

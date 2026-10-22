@@ -1,0 +1,27 @@
+% Estilos comunes de los diagramas de validación (TikZ).
+% Blanco y negro, Times a 8 pt, sin colores, como la Figura 22 de la tesis.
+\usetikzlibrary{positioning,calc,shapes.geometric}
+\tikzset{
+  base/.style   = {font=\fontsize{8}{9.6}\selectfont},
+  proc/.style   = {draw, fill=white, align=center, text width=3.0cm,
+                   minimum height=0.9cm, inner sep=3pt,
+                   execute at begin node={\hyphenpenalty=10000\relax}},
+  propp/.style  = {proc, dashed},
+  negra/.style  = {proc, fill=black!12},
+  falla/.style  = {proc, fill=black!7},
+  dec/.style    = {draw, fill=white, diamond, aspect=1.9, align=center,
+                   inner sep=0.5pt, text width=1.95cm,
+                   execute at begin node={\hyphenpenalty=10000\relax}},
+  term/.style   = {draw, fill=black!4, rounded corners=0.42cm, align=center,
+                   text width=2.7cm, minimum height=0.84cm, inner sep=3pt,
+                   execute at begin node={\hyphenpenalty=10000\relax}},
+  con/.style    = {draw, circle, fill=white, minimum size=0.6cm, inner sep=0pt},
+  nota/.style   = {draw, dashed, fill=white, align=center, text width=4.6cm,
+                   inner sep=3pt, font=\fontsize{7.2}{8.6}\selectfont},
+  marco/.style  = {draw, rounded corners=5pt, black!55, thin},
+  tmarco/.style = {font=\fontsize{8}{9.6}\selectfont\itshape, anchor=north west},
+  fl/.style     = {->, >=latex, semithick},
+  ln/.style     = {semithick},
+  et/.style     = {font=\fontsize{6.8}{8}\selectfont, inner sep=1.2pt, fill=white},
+  union/.style  = {circle, fill=black, inner sep=0pt, minimum size=3pt}
+}

@@ -1,0 +1,333 @@
+{
+ "masas": {
+  "filas": [
+   [
+    "Cuna_frontal_derecha",
+    313.63,
+    388.9,
+    313.63
+   ],
+   [
+    "Cuna_frontal_izquierda",
+    335.045,
+    415.46,
+    335.04
+   ],
+   [
+    "Cuna_posterior_derecha",
+    537.071,
+    665.97,
+    537.07
+   ],
+   [
+    "Cuna_posterior_izquierda",
+    438.988,
+    544.35,
+    438.98
+   ],
+   [
+    "Bandeja_frontal_derecha",
+    189.46,
+    234.93,
+    189.46
+   ],
+   [
+    "Bandeja_frontal_izquierda",
+    188.863,
+    234.19,
+    188.86
+   ],
+   [
+    "Bandeja_posterior_derecha",
+    190.07,
+    235.69,
+    190.07
+   ],
+   [
+    "Bandeja_posterior_izquierda",
+    193.024,
+    239.35,
+    193.02
+   ],
+   [
+    "Soporte_ventilador",
+    193.539,
+    239.99,
+    193.54
+   ],
+   [
+    "Ducto_cuchilla",
+    87.797,
+    108.87,
+    87.79
+   ],
+   [
+    "Rejilla_frontal_derecha",
+    30.471,
+    37.78,
+    30.47
+   ],
+   [
+    "Rejilla_frontal_izquierda",
+    30.471,
+    37.78,
+    30.47
+   ],
+   [
+    "Soporte_actuador",
+    48.891,
+    60.63,
+    48.89
+   ],
+   [
+    "Tapa_actuador",
+    4.482,
+    5.56,
+    4.48
+   ],
+   [
+    "Soporte_camara",
+    117.384,
+    145.56,
+    117.38
+   ],
+   [
+    "Horquilla_camara",
+    23.674,
+    29.36,
+    23.67
+   ],
+   [
+    "Carcasa_ESP32CAM",
+    9.869,
+    12.24,
+    9.87
+   ],
+   [
+    "Horquilla_lampara",
+    43.448,
+    53.88,
+    43.45
+   ],
+   [
+    "Aro_lampara",
+    7.827,
+    9.7,
+    7.83
+   ]
+  ],
+  "total_g": 3700.2,
+  "vol_total_cm3": 2984.0,
+  "z_mesa": -40.0,
+  "cg_propias_mm": [
+   164.8,
+   152.7,
+   94.0
+  ],
+  "m_conjunto": 9.2,
+  "cg_conjunto_mm": [
+   166.2,
+   196.2,
+   173.9
+  ],
+  "con_comerciales": 9.7,
+  "margen_10kg": 0.3
+ },
+ "conjunto": {
+  "m": 9.2,
+  "W": 90.25,
+  "dx_mm": 14.1,
+  "brazo_A": 144.0,
+  "brazo_B": 143.8,
+  "A": {
+   "Mv": 3.822,
+   "Mr": 12.993,
+   "FS": 3.4
+  },
+  "B": {
+   "Mv": 2.095,
+   "Mr": 12.977,
+   "FS": 6.2
+  },
+  "C": {
+   "uA": 0.294,
+   "uB": 0.161,
+   "u": 0.456,
+   "FS": 2.2
+  },
+  "k_mm_kg": 9.195,
+  "d0_mm": 158.0,
+  "m_crit": 4.29,
+  "a_crit_mm_s2": 34000.0,
+  "deslizamiento": {
+   "0.3": {
+    "solo": 1.67,
+    "combinado": 1.58
+   },
+   "0.8": {
+    "solo": 4.45,
+    "combinado": 4.23
+   }
+  },
+  "Fv": 5.23,
+  "Fh": 15.3
+ },
+ "soporte_camara": {
+  "L_mm": 165.0,
+  "I_mm4": 60066.0,
+  "k_tubo": 140401.0,
+  "m_tubo_g": 71.3,
+  "m_punta_g": 105.3,
+  "m_ef_kg": 0.122,
+  "f_rigida": 170.7,
+  "direcciones": {
+   "flexion hacia X (tornillos a 17 mm, ancho 100 mm)": {
+    "k_theta": 13725.0,
+    "k_raiz": 504150.0,
+    "k": 109818.0,
+    "f": 150.9
+   },
+   "flexion hacia Y (tornillos a 35 mm, ancho 60 mm)": {
+    "k_theta": 4000.0,
+    "k_raiz": 146924.0,
+    "k": 71794.0,
+    "f": 122.0
+   }
+  },
+  "f_peor": 122.0,
+  "sensibilidad_masa": {
+   "50": 102.8,
+   "100": 90.5
+  },
+  "flecha_mm": 0.0144,
+  "giro_rad": 0.00010949694899223226,
+  "sigma_MPa": 0.057,
+  "F_punta_N": 1.033
+ },
+ "camara": {
+  "h_lente": 123.0,
+  "d_lente": 214.2,
+  "oblicuidad": 54.9,
+  "campo_necesario": 67.6,
+  "mm_por_px": 0.464,
+  "px_cordon": 0.86,
+  "visuales": {
+   "centro": {
+    "distancia": 214.2,
+    "oblicuidad": 54.9,
+    "angulo_al_eje": 0.0,
+    "obstruida_por": []
+   },
+   "esquina (-1, -1)": {
+    "distancia": 238.6,
+    "oblicuidad": 59.0,
+    "angulo_al_eje": 32.1,
+    "obstruida_por": []
+   },
+   "esquina (-1, +1)": {
+    "distancia": 326.2,
+    "oblicuidad": 67.8,
+    "angulo_al_eje": 13.1,
+    "obstruida_por": []
+   },
+   "esquina (+1, -1)": {
+    "distancia": 133.2,
+    "oblicuidad": 22.5,
+    "angulo_al_eje": 33.8,
+    "obstruida_por": []
+   },
+   "esquina (+1, +1)": {
+    "distancia": 259.3,
+    "oblicuidad": 61.7,
+    "angulo_al_eje": 29.3,
+    "obstruida_por": []
+   }
+  },
+  "oblicuidad_max": 67.8,
+  "reflejo_mm": [
+   89.3,
+   -168.1
+  ],
+  "reflejo_dentro_placa": false,
+  "reflejo_dist_centro": 190.3,
+  "giro_rotula_camara": 39.4,
+  "giro_rotula_aro": 27.7,
+  "aro_fuera_eje": 97.6,
+  "diag_placa": 254.6,
+  "dist_min_65": 200.0,
+  "dist_min_120": 73.0
+ },
+ "iluminacion": {
+  "h_aro": 107.4,
+  "d_aro": 233.9,
+  "haz_vs_centro": 0.4,
+  "depresion": 27.7,
+  "I0": 412.0,
+  "flujo_I0": 1.164,
+  "centro": {
+   "d": 233.9,
+   "psi": 0.4,
+   "inc": 62.7,
+   "lx_lm": 7.21,
+   "lx": 3462.0
+  },
+  "esquinas": {
+   "-1-1": {
+    "d": 221.0,
+    "psi": 32.3,
+    "inc": 60.9,
+    "lx_lm": 3.84,
+    "lx": 1844.0
+   },
+   "-1+1": {
+    "d": 344.9,
+    "psi": 12.8,
+    "inc": 71.8,
+    "lx_lm": 1.98,
+    "lx": 951.0
+   },
+   "+1-1": {
+    "d": 151.1,
+    "psi": 29.6,
+    "inc": 44.7,
+    "lx_lm": 13.66,
+    "lx": 6555.0
+   },
+   "+1+1": {
+    "d": 304.9,
+    "psi": 22.9,
+    "inc": 69.4,
+    "lx_lm": 2.18,
+    "lx": 1044.0
+   }
+  },
+  "peor": {
+   "su": -1.0,
+   "sv": 1.0,
+   "d": 344.9,
+   "psi": 12.8,
+   "inc": 71.8,
+   "lx_lm": 1.98,
+   "lx": 951.0
+  },
+  "lm_necesarios": 218.0,
+  "lm_con_margen": 327.0,
+  "veces": 2.2,
+  "uniformidad": 0.1
+ },
+ "opex_llm": {
+  "img_sup": 570,
+  "img_ver": 2280,
+  "sup_usd": 0.00206,
+  "ver_usd": 0.0044,
+  "msg_usd": 0.00217,
+  "por_impresion_usd": 0.0335,
+  "mes_usd": 6.67,
+  "mes_soles": 22.93,
+  "impresiones_usd": 6.02,
+  "mensajes_usd": 0.65,
+  "todo_alta_usd_mes": 11.73,
+  "todo_alta_soles_mes": 40.3,
+  "subtotal_soles": 25.6
+ }
+}

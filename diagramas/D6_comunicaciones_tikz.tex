@@ -1,0 +1,48 @@
+% Diagrama 6. Arquitectura de comunicaciones, en TikZ.
+% Equivale a D6_comunicaciones.mmd.
+% Compilar: pdflatex D6_comunicaciones_tikz.tex
+\documentclass[border=4pt]{standalone}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish,es-noshorthands]{babel}
+\usepackage{times}
+\usepackage{amssymb}
+\usepackage{tikz}
+\input{estilo_diagramas}
+
+\begin{document}
+\begin{tikzpicture}[base, bl/.style={proc, minimum height=1.05cm}, dfl/.style={<->, >=latex, semithick}]
+% ---------------- instalación local ----------------
+\node[bl, text width=2.8cm] (CAM) at (0,0)      {\textbf{ESP32-CAM} OV2640\\en el soporte de cámara};
+\node[bl, text width=4.4cm] (PI)  at (6.2,-1.9) {\textbf{Raspberry Pi Zero 2 W}\\orquestador propio en Python:\\agente, servidor MCP, bot de Telegram\\y órdenes de rutina por palabras clave};
+\node[bl, text width=2.8cm] (IMP) at (13.0,0)   {\textbf{Bambu Lab A1 mini}\\modo de acceso local};
+\node[bl, text width=2.8cm] (PCB) at (0,-3.8)   {\textbf{Placa de control}\\ESP32 DevKit};
+
+\draw[fl]  (CAM.east) -- node[et, above, pos=0.45] {Wi-Fi: imagen capturada} (5.0,0) -- (5.0,0 |- PI.north);
+\draw[dfl] (IMP.west) -- node[et, above, pos=0.5, align=center] {Wi-Fi: publicación y\\suscripción (MQTT) cifrado,\\estado e instrucciones} (7.4,0) -- (7.4,0 |- PI.north);
+\draw[dfl] (PCB.east) -- node[et, above, pos=0.45, align=center] {UART 3.3 V por J11 (cable)\\órdenes y estado} (5.0,-3.8) -- (5.0,0 |- PI.south);
+\draw[fl]  (PCB.north) -- node[et, right=1pt, align=left] {5.1 V por J12\\solo alimentación} (CAM.south);
+
+\draw[marco] (-1.75,1.75) rectangle (15.25,-4.7);
+\node[tmarco] at (-1.65,1.7) {Instalación local};
+\draw[marco, dashed] (11.1,1.3) rectangle (14.95,-0.8);
+\node[tmarco, font=\fontsize{7.2}{8.6}\selectfont\itshape] at (11.2,1.25) {Equipo externo al sistema};
+
+% ---------------- servicios externos ----------------
+\node[negra, text width=2.8cm, minimum height=1.05cm] (AG)  at (1.6,-7.6)  {\textbf{Agente remoto}: API de OpenAI, modelo con visión};
+\node[bl, text width=2.8cm] (TG)  at (6.2,-7.6)  {\textbf{Telegram}\\interfaz de bots};
+\node[bl, text width=2.8cm] (REG) at (10.8,-7.6) {\textbf{Cloudflare Workers}, D1 y R2: registro, imágenes y página de administración};
+\node[term, text width=2.0cm] (USR) at (6.2,-9.75) {Operador};
+\node[term, text width=2.6cm] (ADM) at (10.8,-9.75) {Administrador, en el navegador};
+
+\draw[dfl] (5.6,0 |- PI.south) -- (5.6,-5.3) -- node[et, above, pos=0.5] {saliente: captura y respuesta} (1.6,-5.3) -- (AG.north);
+\draw[dfl] (PI.south) -- (TG.north);
+\node[et, anchor=west] at (6.3,-5.9) {saliente, consulta de larga espera};
+\draw[fl]  (6.8,0 |- PI.south) -- (6.8,-5.3) -- node[et, above, pos=0.5] {saliente: eventos y capturas} (10.8,-5.3) -- (REG.north);
+\draw[dfl] (TG) -- node[et, right=1pt] {avisos, fotos y botones} (USR);
+\draw[dfl] (REG) -- node[et, right=1pt] {usuario y contraseña} (ADM);
+
+\draw[marco] (-0.15,-6.45) rectangle (12.55,-8.45);
+\node[tmarco] at (-0.05,-6.5) {Internet: servicios externos};
+\end{tikzpicture}
+\end{document}

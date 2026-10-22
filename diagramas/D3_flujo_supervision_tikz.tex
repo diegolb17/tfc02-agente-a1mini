@@ -1,0 +1,72 @@
+% Diagrama 3. Flujo de la supervisión durante la impresión, en TikZ.
+% Equivale a D3_flujo_supervision.mmd. (P) = propuesto, no fijado en la tesis.
+% Compilar: pdflatex D3_flujo_supervision_tikz.tex
+\documentclass[border=4pt]{standalone}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish,es-noshorthands]{babel}
+\usepackage{times}
+\usepackage{amssymb}
+\usepackage{tikz}
+\input{estilo_diagramas}
+
+\begin{document}
+\begin{tikzpicture}[base]
+% ======================= parte 1: captura y detección =======================
+\node[term] (A) at (3.0,0)     {Inicio de impresión\\(estado por red local)};
+\node[dec]  (F) at (3.0,-1.95) {¿Impresión terminada?};
+\node[term, text width=2.3cm] (G1) at (6.35,-1.95) {Ciclo de remoción: etapas 1 a 4};
+\node[proc] (B) at (3.0,-3.75) {Cada 10 min: iluminación encendida (D14), captura por Wi-Fi};
+\node[proc] (D) at (3.0,-5.2) {Consulta al modelo de visión (API de OpenAI): captura y previsualización reducidas a 800 por 600};
+\node[dec, text width=1.75cm]  (E) at (3.0,-7.1) {¿El modelo informa falla? (umbral por fijar)};
+\node[negra] (H) at (3.0,-9.05) {Segunda consulta, imagen completa, para confirmar la falla};
+\node[propp, text width=2.3cm] (S) at (6.35,-9.05) {Sigue sin supervisión, aviso al volver la red (P)};
+\node[dec]  (I) at (3.0,-10.75) {¿Falla confirmada?};
+\node[con]  (X1) at (3.0,-12.35) {2};
+
+\draw[fl] (A) -- (F);
+\draw[fl] (F.east) -- node[et, above] {sí} (G1.west);
+\draw[fl] (F) -- node[et, right=1pt] {no} (B);
+\draw[fl] (B) -- (D);
+\draw[fl] (D) -- (E);
+\draw[fl] (E) -- node[et, right=1pt] {sí} (H);
+\draw[fl] (H) -- (I);
+\draw[fl] (H.east) -- node[et, above] {sin red} (S.west);
+\draw[fl] (I) -- node[et, right=1pt] {sí} (X1);
+% retornos al inicio del lazo
+\draw[ln] (E.west) -- node[et, above, pos=0.5] {no} (0.25,-7.1);
+\draw[ln] (I.west) -- node[et, above, pos=0.5] {no} (0.25,-10.75) -- (0.25,-0.95);
+\node[union] at (0.25,-7.1) {};
+\draw[fl] (0.25,-0.95) -- (3.0,-0.95);
+\draw[fl] (S.east) -- (7.85,-9.05) -- (7.85,-0.95) -- (3.0,-0.95);
+\node[union] at (3.0,-0.95) {};
+
+\draw[marco] (-0.1,1.0) rectangle (8.1,-12.95);
+\node[tmarco] at (0.0,0.95) {Parte 1: captura y detección};
+
+% ======================= parte 2: respuesta a la falla =======================
+\node[con]  (X2) at (12.2,0)    {2};
+\node[proc] (J)  at (12.2,-1.3) {Pausa de la impresora por red local (P)};
+\node[proc] (K)  at (12.2,-2.75) {Aviso por Telegram: foto, descripción y botones};
+\node[dec]  (L)  at (12.2,-4.4) {Decisión del usuario};
+\node[proc, text width=2.35cm] (M) at (9.75,-6.35) {Reanudar la impresión (confirmación explícita)};
+\node[term, text width=2.35cm] (R1) at (9.75,-8.05) {Vuelve a la captura (parte 1)};
+\node[proc, text width=2.35cm] (N) at (12.4,-6.35) {Cancelar el trabajo: remoción de pieza fallida};
+\node[term, text width=2.35cm] (G2) at (12.4,-8.05) {Ciclo de remoción: etapas 1 a 4};
+\node[propp, text width=2.2cm] (O) at (15.0,-6.35) {Mantener la pausa y recordar cada 15 min (P)};
+
+\draw[fl] (X2) -- (J);
+\draw[fl] (J) -- (K);
+\draw[fl] (K) -- (L);
+\draw[fl] (L.west) -- node[et, above, pos=0.4] {reanudar} (9.75,-4.4) -- (M.north);
+\draw[fl] (M) -- (R1);
+\draw[fl] (L.south) -- node[et, right=1pt, pos=0.45] {cancelar} (12.2,-5.55) -- (12.4,-5.55) -- (N.north);
+\draw[fl] (N) -- (G2);
+\draw[fl] (L.east) -- node[et, above, pos=0.55] {sin respuesta} (15.0,-4.4) -- (O.north);
+\draw[fl] (O.east) -- (16.4,-6.35) -- (16.4,-3.5) -- (12.2,-3.5);
+\node[union] at (12.2,-3.5) {};
+
+\draw[marco] (8.35,1.0) rectangle (16.65,-8.8);
+\node[tmarco] at (8.45,0.95) {Parte 2: respuesta a la falla};
+\end{tikzpicture}
+\end{document}

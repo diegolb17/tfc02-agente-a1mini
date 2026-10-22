@@ -1,0 +1,88 @@
+% Diagrama 2. Flujo de la secuencia de remoción, en TikZ.
+% Equivale a D2_flujo_remocion.mmd. (P) = propuesto, no fijado en la tesis.
+% Actualizado el 19 oct 2026 a la tesis del 15 oct: modulación del ventilador, temperatura de la impresora,
+% L12-P con posición, tiempos máximos de la Tabla 15 y tres intentos.
+% 21 oct 2026 (marcas de Diego): la autorización del usuario solo se pide si la confianza del agente es baja;
+% "botón de emergencia" en lugar de "seta"; referencias por nombre; rótulos separados de las flechas.
+% Compilar: pdflatex D2_flujo_remocion_tikz.tex
+\documentclass[border=4pt]{standalone}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish,es-noshorthands]{babel}
+\usepackage{times}
+\usepackage{amssymb}
+\usepackage{tikz}
+\input{estilo_diagramas}
+
+\begin{document}
+\begin{tikzpicture}[base]
+% ======================= parte 1: preparación =======================
+\node[term] (A)  at (3.0,0)     {Fin de impresión\\(estado por red local)};
+\node[dec]  (B)  at (3.0,-1.75) {¿T > 38.7 °C?};
+\node[proc] (C)  at (3.0,-3.45) {\textbf{Etapa 1}\\ventilador principal al 100\,\% por modulación (D27), nominal 2.9 min};
+\node[dec]  (C1) at (3.0,-5.35) {¿T $\leq$ 38.7 °C? (impresora)};
+\node[falla, text width=1.9cm] (FT) at (6.85,-7.5) {Falla del enfriamiento: ventilador sin efecto};
+\node[dec, text width=1.7cm]  (E)  at (3.0,-8.1) {¿Pieza presente? (captura)};
+\node[term, text width=1.6cm] (L0) at (-0.6,-8.1) {Placa libre: fin sin flexión};
+\node[dec, text width=1.6cm]  (CF) at (3.0,-10.45) {¿Confianza del agente alta?};
+\node[dec, text width=1.6cm]  (G)  at (3.0,-12.75) {¿Autoriza el usuario? (R-SEG-01)};
+\node[con]  (X1) at (3.0,-14.75) {1};
+\node[falla, text width=1.9cm] (H1) at (6.85,-14.75) {Espera de intervención humana};
+
+\draw[fl] (A) -- (B);
+\draw[fl] (B) -- node[et, right=1pt] {sí} (C);
+\draw[fl] (C) -- (C1);
+\draw[fl] (C1.west) -- (1.25,-5.35) -- node[et, left=1pt, align=right, pos=0.5] {no, antes\\de 6 min} (1.25,-3.45) -- (C.west);
+\draw[fl] (C1.east) -- node[et, above=2pt, align=center, pos=0.45] {no, pasados 6 min,\\o sin giro (P)} (6.85,-5.35) -- (FT.north);
+\draw[fl] (C1) -- node[et, right=1pt, pos=0.3, align=left] {sí, o sin dato\\y 6 min cumplidos} (E);
+\draw[ln] (B.west) -- node[et, above=2pt, pos=0.6] {no} (-0.6,-1.75) -- (-0.6,-7.0);
+\draw[fl] (-0.6,-7.0) -- (3.0,-7.0);
+\node[union] at (3.0,-7.0) {};
+\draw[fl] (E.west) -- node[et, above=2pt, pos=0.5] {no} (L0.east);
+\draw[fl] (E) -- node[et, right=1pt] {sí} (CF);
+\draw[fl] (CF) -- node[et, right=1pt] {no} (G);
+\draw[ln] (CF.west) -- node[et, above=2pt, pos=0.5] {sí} (0.0,-10.45) -- (0.0,-14.05) -- (3.0,-14.05);
+\node[union] at (3.0,-14.05) {};
+\draw[fl] (G) -- node[et, right=1pt, pos=0.35] {sí} (X1);
+\draw[fl] (FT) -- (H1);
+\draw[ln] (G.east) -- node[et, above=2pt, align=center, pos=0.42] {no, o 30 min\\sin respuesta (P)} (6.85,-12.75);
+\node[union] at (6.85,-12.75) {};
+
+\draw[marco] (-1.75,1.0) rectangle (8.1,-15.5);
+\node[tmarco] at (-1.65,0.95) {Parte 1: preparación};
+
+% ======================= parte 2: ejecución =======================
+\node[con]  (X2) at (12.9,0)     {1};
+\node[proc, text width=3.3cm] (I)  at (12.9,-1.75) {\textbf{Etapa 2}\\extensión hasta 35 mm leídos en el potenciómetro (D34), 6.9 s};
+\node[dec, text width=1.8cm]  (I1) at (12.9,-3.85) {¿35 mm antes de 12 s y sin bloqueo?};
+\node[falla, text width=1.45cm] (BQ) at (16.3,-3.85) {Bloqueo: retracción y aviso};
+\node[proc, text width=3.3cm] (J)  at (12.9,-5.95) {\textbf{Etapa 3}\\retracción del actuador y barrido del cabezal a tres cotas, 30 s};
+\node[dec, text width=1.6cm]  (J1) at (12.9,-7.95) {¿Cabezal en reposo antes de 60 s?};
+\node[proc, text width=3.3cm] (K)  at (12.9,-9.95) {\textbf{Etapa 4}\\iluminación, captura y consulta al agente remoto, 5 s};
+\node[dec]  (K1) at (12.9,-11.65) {¿Placa libre?};
+\node[term] (OK) at (12.9,-13.45) {Aviso al usuario: equipo disponible};
+\node[dec, text width=1.35cm] (R) at (9.85,-11.65) {¿Intento $<$ 3?};
+\node[term, text width=1.9cm, dashed] (SRT) at (15.75,-9.95) {Estado Sin red (P) del diagrama de estados};
+\node[falla, text width=1.9cm] (H2) at (15.75,-13.45) {Espera de intervención humana};
+
+\draw[fl] (X2) -- (I);
+\draw[fl] (I) -- (I1);
+\draw[fl] (I1) -- node[et, right=1pt] {sí} (J);
+\draw[fl] (I1.east) -- node[et, above=2pt] {no} (BQ.west);
+\draw[fl] (BQ.east) -- (17.3,-3.85) -- (17.3,-13.45) -- (H2.east);
+\draw[fl] (J) -- (J1);
+\draw[fl] (J1) -- node[et, right=1pt] {sí} (K);
+\draw[fl] (K) -- (K1);
+\draw[fl] (K1) -- node[et, right=1pt] {sí} (OK);
+\draw[fl] (K1.west) -- node[et, above=2pt] {no} (R.east);
+\draw[fl] (R.north) -- node[et, left=1pt, pos=0.5] {sí} (9.85,-1.75) -- (I.west);
+\draw[fl] (J1.east) -- node[et, above=2pt, align=center, pos=0.45] {no, o\\sin red} (15.75,-7.95) -- (SRT.north);
+\draw[fl] (K1.east) -- node[et, above=2pt, align=center, pos=0.45] {sin respuesta\\en 30 s} (15.75,-11.65) -- (SRT.south);
+\draw[fl] (R.south) -- node[et, left=1pt, pos=0.35] {no} (9.85,-14.35) -- (15.75,-14.35) -- (H2.south);
+
+\draw[marco] (8.3,1.0) rectangle (17.6,-15.5);
+\node[tmarco] at (8.4,0.95) {Parte 2: ejecución};
+
+\node[nota, text width=12.5cm] at (7.93,-16.1) {En cualquier punto: botón de emergencia pulsado, corte de +24V\_ACT (parada de emergencia del diagrama de estados).};
+\end{tikzpicture}
+\end{document}

@@ -1,0 +1,500 @@
+{
+ "vuelco": {
+  "m": 6.72,
+  "W": 65.92,
+  "e_G_mm": 215.6,
+  "dd_mm": 20.5,
+  "F_i": 15.3,
+  "e_cama_mm": 90.12,
+  "casos": [
+   {
+    "caso": "estático, plataforma centrada",
+    "d_mm": 157.5,
+    "Mr": 9.757,
+    "Mv": 4.749,
+    "FS": 2.05
+   },
+   {
+    "caso": "dinámico, plataforma en su posición más alta",
+    "d_mm": 178.0,
+    "Mr": 11.026,
+    "Mv": 6.051,
+    "FS": 1.82
+   },
+   {
+    "caso": "dinámico, plataforma en su posición más baja",
+    "d_mm": 137.0,
+    "Mr": 8.487,
+    "Mv": 6.051,
+    "FS": 1.4
+   }
+  ],
+  "barrido_h": [
+   {
+    "h_mm": 0,
+    "Mv": 6.241,
+    "FS": 1.36
+   },
+   {
+    "h_mm": 2,
+    "Mv": 6.165,
+    "FS": 1.38
+   },
+   {
+    "h_mm": 5,
+    "Mv": 6.051,
+    "FS": 1.4
+   },
+   {
+    "h_mm": 8,
+    "Mv": 5.938,
+    "FS": 1.43
+   },
+   {
+    "h_mm": 10,
+    "Mv": 5.862,
+    "FS": 1.45
+   },
+   {
+    "h_mm": 15,
+    "Mv": 5.673,
+    "FS": 1.5
+   },
+   {
+    "h_mm": 20,
+    "Mv": 5.484,
+    "FS": 1.55
+   }
+  ],
+  "barrido_alfa": [
+   {
+    "alfa": 10,
+    "Mr": 8.895,
+    "Mv": 3.714,
+    "FS": 2.4
+   },
+   {
+    "alfa": 15,
+    "Mr": 8.724,
+    "Mv": 4.896,
+    "FS": 1.78
+   },
+   {
+    "alfa": 20,
+    "Mr": 8.487,
+    "Mv": 6.051,
+    "FS": 1.4
+   },
+   {
+    "alfa": 25,
+    "Mr": 8.186,
+    "Mv": 7.171,
+    "FS": 1.14
+   },
+   {
+    "alfa": 30,
+    "Mr": 7.822,
+    "Mv": 8.245,
+    "FS": 0.95
+   },
+   {
+    "alfa": 35,
+    "Mr": 7.399,
+    "Mv": 9.267,
+    "FS": 0.8
+   }
+  ],
+  "alfa_limite": 28.5,
+  "N": 61.95,
+  "T_est": 22.55,
+  "T_din": 37.85,
+  "sigma_pared_MPa": 0.364,
+  "FS_pared": 137.0,
+  "atras": {
+   "Mr": 13.349,
+   "Mv": 1.379,
+   "FS": 9.7
+  }
+ },
+ "enfriamiento": {
+  "h_rad": 6.13,
+  "lnr": 0.8473,
+  "t_max_min": 4.0,
+  "tau_max": 283.0,
+  "h_min": 32.1,
+  "hc_min": 26.0,
+  "v_min": 7.55,
+  "A_in_mm2": 6082.1,
+  "A_out_mm2": 1907.2,
+  "contraccion": 3.19,
+  "K_sel": 192737.0,
+  "f_sel": 0.996,
+  "barrido_H": [
+   {
+    "H_mm": 6,
+    "A_mm2": 894.0,
+    "f": 0.87,
+    "Sunon PMD2409PMB1-A": {
+     "Q_cfm": 28.6,
+     "dp": 167.0,
+     "v": 15.1,
+     "v_ef": 13.1,
+     "t_min": 3.18
+    },
+    "Delta PFB0924EHEP6": {
+     "Q_cfm": 27.9,
+     "dp": 160.0,
+     "v": 14.7,
+     "v_ef": 12.8,
+     "t_min": 3.21
+    },
+    "Delta PFB0924GHEP6": {
+     "Q_cfm": 33.7,
+     "dp": 232.0,
+     "v": 17.8,
+     "v_ef": 15.5,
+     "t_min": 2.97
+    }
+   },
+   {
+    "H_mm": 8,
+    "A_mm2": 1192.0,
+    "f": 0.931,
+    "Sunon PMD2409PMB1-A": {
+     "Q_cfm": 37.8,
+     "dp": 160.0,
+     "v": 15.0,
+     "v_ef": 13.9,
+     "t_min": 3.1
+    },
+    "Delta PFB0924EHEP6": {
+     "Q_cfm": 36.7,
+     "dp": 150.0,
+     "v": 14.5,
+     "v_ef": 13.5,
+     "t_min": 3.14
+    },
+    "Delta PFB0924GHEP6": {
+     "Q_cfm": 44.2,
+     "dp": 218.0,
+     "v": 17.5,
+     "v_ef": 16.3,
+     "t_min": 2.9
+    }
+   },
+   {
+    "H_mm": 10,
+    "A_mm2": 1490.0,
+    "f": 0.969,
+    "Sunon PMD2409PMB1-A": {
+     "Q_cfm": 46.2,
+     "dp": 151.0,
+     "v": 14.6,
+     "v_ef": 14.2,
+     "t_min": 3.08
+    },
+    "Delta PFB0924EHEP6": {
+     "Q_cfm": 44.6,
+     "dp": 140.0,
+     "v": 14.1,
+     "v_ef": 13.7,
+     "t_min": 3.12
+    },
+    "Delta PFB0924GHEP6": {
+     "Q_cfm": 53.7,
+     "dp": 203.0,
+     "v": 17.0,
+     "v_ef": 16.5,
+     "t_min": 2.89
+    }
+   },
+   {
+    "H_mm": 12.8,
+    "A_mm2": 1907.2,
+    "f": 0.996,
+    "Sunon PMD2409PMB1-A": {
+     "Q_cfm": 56.6,
+     "dp": 138.0,
+     "v": 14.0,
+     "v_ef": 14.0,
+     "t_min": 3.1
+    },
+    "Delta PFB0924EHEP6": {
+     "Q_cfm": 54.0,
+     "dp": 125.0,
+     "v": 13.4,
+     "v_ef": 13.3,
+     "t_min": 3.16
+    },
+    "Delta PFB0924GHEP6": {
+     "Q_cfm": 65.0,
+     "dp": 181.0,
+     "v": 16.1,
+     "v_ef": 16.0,
+     "t_min": 2.92
+    }
+   },
+   {
+    "H_mm": 16,
+    "A_mm2": 2384.0,
+    "f": 1.0,
+    "Sunon PMD2409PMB1-A": {
+     "Q_cfm": 66.5,
+     "dp": 123.0,
+     "v": 13.2,
+     "v_ef": 13.2,
+     "t_min": 3.18
+    },
+    "Delta PFB0924EHEP6": {
+     "Q_cfm": 62.7,
+     "dp": 109.0,
+     "v": 12.4,
+     "v_ef": 12.4,
+     "t_min": 3.26
+    },
+    "Delta PFB0924GHEP6": {
+     "Q_cfm": 75.4,
+     "dp": 158.0,
+     "v": 14.9,
+     "v_ef": 14.9,
+     "t_min": 3.01
+    }
+   },
+   {
+    "H_mm": 20,
+    "A_mm2": 2980.0,
+    "f": 1.0,
+    "Sunon PMD2409PMB1-A": {
+     "Q_cfm": 76.2,
+     "dp": 106.0,
+     "v": 12.1,
+     "v_ef": 12.1,
+     "t_min": 3.3
+    },
+    "Delta PFB0924EHEP6": {
+     "Q_cfm": 70.9,
+     "dp": 92.0,
+     "v": 11.2,
+     "v_ef": 11.2,
+     "t_min": 3.4
+    },
+    "Delta PFB0924GHEP6": {
+     "Q_cfm": 85.2,
+     "dp": 132.0,
+     "v": 13.5,
+     "v_ef": 13.5,
+     "t_min": 3.14
+    }
+   },
+   {
+    "H_mm": 25,
+    "A_mm2": 3725.0,
+    "f": 1.0,
+    "Sunon PMD2409PMB1-A": {
+     "Q_cfm": 85.1,
+     "dp": 88.0,
+     "v": 10.8,
+     "v_ef": 10.8,
+     "t_min": 3.46
+    },
+    "Delta PFB0924EHEP6": {
+     "Q_cfm": 78.1,
+     "dp": 74.0,
+     "v": 9.9,
+     "v_ef": 9.9,
+     "t_min": 3.58
+    },
+    "Delta PFB0924GHEP6": {
+     "Q_cfm": 93.8,
+     "dp": 107.0,
+     "v": 11.9,
+     "v_ef": 11.9,
+     "t_min": 3.32
+    }
+   }
+  ],
+  "seleccion": {
+   "Sunon PMD2409PMB1-A": {
+    "Q_cfm": 56.6,
+    "Q_m3s": 0.026729427525097924,
+    "dp": 138.0,
+    "v": 14.0,
+    "v_ef": 14.0,
+    "h_conv": 35.3,
+    "tau": 219.0,
+    "t_min": 3.1,
+    "t38_min": 3.43,
+    "P_aire_W": 3.68,
+    "P_elec_W": 12.2,
+    "rend": 30.2
+   },
+   "Delta PFB0924EHEP6": {
+    "Q_cfm": 54.0,
+    "Q_m3s": 0.025498404221252553,
+    "dp": 125.0,
+    "v": 13.4,
+    "v_ef": 13.3,
+    "h_conv": 34.5,
+    "tau": 224.0,
+    "t_min": 3.16,
+    "t38_min": 3.5,
+    "P_aire_W": 3.2,
+    "P_elec_W": 13.0,
+    "rend": 24.6
+   },
+   "Delta PFB0924GHEP6": {
+    "Q_cfm": 65.0,
+    "Q_m3s": 0.030679055485272475,
+    "dp": 181.0,
+    "v": 16.1,
+    "v_ef": 16.0,
+    "h_conv": 37.8,
+    "tau": 207.0,
+    "t_min": 2.92,
+    "t38_min": 3.23,
+    "P_aire_W": 5.57,
+    "P_elec_W": 15.6,
+    "rend": 35.7
+   }
+  },
+  "natural": {
+   "solo_conv_min": 16.1,
+   "con_rad_min": 9.1,
+   "dos_caras_min": 4.5,
+   "tau_con_rad": 644.0
+  },
+  "Q_min_m3s_H128": 0.01447,
+  "Q_min_cfm_H128": 30.7
+ },
+ "piso": {
+  "N": 61.95,
+  "P_pata": 20.65,
+  "D": 21.446,
+  "w_panel_mm": 0.074,
+  "P_nerv": 10.32,
+  "w_nerv_mm": 0.108,
+  "w_total_mm": 0.182,
+  "sigma_nerv_MPa": 0.947,
+  "FS_nerv": 53.0,
+  "p_pata_MPa": 0.029,
+  "FS_aplast": 2054.0,
+  "w_fluencia_mm": 0.55
+ },
+ "actuador": {
+  "F_req": 26.79,
+  "F_stall_ext": 122.1,
+  "v_op": 5.07,
+  "t_etapa2_s": 6.9,
+  "margen_pp": 2.31,
+  "margen_max": 2.99,
+  "lamina_vs_a": [
+   {
+    "a_mm": 180,
+    "sigma_MPa": 138.9,
+    "R_mm": 360.0,
+    "P_N": 5.8
+   },
+   {
+    "a_mm": 150,
+    "sigma_MPa": 200.0,
+    "R_mm": 250.0,
+    "P_N": 10.0
+   },
+   {
+    "a_mm": 120,
+    "sigma_MPa": 312.5,
+    "R_mm": 160.0,
+    "P_N": 19.5
+   },
+   {
+    "a_mm": 100,
+    "sigma_MPa": 450.0,
+    "R_mm": 111.0,
+    "P_N": 33.7
+   },
+   {
+    "a_mm": 95,
+    "sigma_MPa": 498.6,
+    "R_mm": 100.0,
+    "P_N": 39.4
+   },
+   {
+    "a_mm": 80,
+    "sigma_MPa": 703.1,
+    "R_mm": 71.0,
+    "P_N": 65.9
+   }
+  ]
+ },
+ "conjunto": {
+  "m": 8.89,
+  "W": 87.21,
+  "dx_mm": 14.6,
+  "brazo_A": 144.4,
+  "brazo_B": 141.7,
+  "A": {
+   "Mv": 3.822,
+   "Mr": 12.597,
+   "FS": 3.3
+  },
+  "B": {
+   "Mv": 2.095,
+   "Mr": 12.358,
+   "FS": 5.9
+  },
+  "C": {
+   "uA": 0.303,
+   "uB": 0.169,
+   "u": 0.473,
+   "FS": 2.11
+  },
+  "k_mm_kg": 9.516,
+  "d0_mm": 159.0,
+  "m_crit": 4.17,
+  "a_crit_mm_s2": 32960.0,
+  "deslizamiento": {
+   "0.3": {
+    "solo": 1.61,
+    "combinado": 1.53
+   },
+   "0.8": {
+    "solo": 4.29,
+    "combinado": 4.07
+   }
+  },
+  "Fv": 5.23,
+  "Fh": 15.3
+ },
+ "operacion": {
+  "E_ciclo_Wh": 1.02,
+  "E_dia_Wh": 122.0,
+  "E_mes_kWh": 3.66,
+  "tarifa": 0.714,
+  "c_energia": 2.61,
+  "tok_sup": 71592,
+  "tok_ver": 102604,
+  "usd_imp": 0.0274,
+  "usd_mes": 4.93,
+  "soles_api_mes": 17.75,
+  "tc": 3.6,
+  "imp_mes": 180,
+  "total_sin_mant": 20.36,
+  "usd_imp_todo_alto": 0.1077,
+  "soles_api_mes_todo_alto": 69.79
+ },
+ "soporte_camara": {
+  "k_tubo": 78837.0,
+  "f_rigida": 125.9,
+  "kth_voladizo_Nm_rad": 303.6,
+  "k_voladizo": 6924.0,
+  "f_voladizo": 37.3,
+  "f_ambos": 83.0,
+  "f_10mm": 111.3,
+  "W_par": 22.55,
+  "px_mm": 0.444,
+  "k_min_N_mm": 34.4,
+  "A_cont": 585,
+  "E_min_2mm_MPa": 0.118,
+  "E_min_3mm_MPa": 0.177
+ }
+}

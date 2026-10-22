@@ -1,0 +1,15 @@
+ERC report (2026-10-21T00:07:52, Encoding UTF8)
+Report includes: Errors, Warnings, Exclusions
+
+***** Sheet /
+[lib_symbol_mismatch]: El símbolo '1N5822' no coincide con la copia en la biblioteca 'Diode'
+    ; warning
+    @(139.70 mm, 33.02 mm): Symbol D1 [1N5822]
+
+ ** ERC messages: 1  Errors 0  Warnings 1
+
+ ** Ignored checks:
+    - Global label only appears once in the schematic
+    - Four connection points are joined together
+    - SPICE model issue
+    - Assigned footprint doesn't match footprint filters

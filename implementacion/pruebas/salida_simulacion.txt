@@ -1,0 +1,53 @@
+Prueba de simulacion del orquestador, 2026-10-22 16:39
+Impresora, camara, modelo y operador simulados; tiempo acelerado 60 veces.
+
+==============================================================================
+Escenario A_umbral_maximo (umbral 1.0): Umbral al maximo (valor de la tesis mientras no se calibre): todo pasa por el operador.
+Conversacion:
+  [OPERADOR] /referencia
+  [BOT] (foto) Guardé la referencia de la plataforma vacía (1600 x 1200).
+Consultas al modelo (tipo, resolucion, veredicto, confianza, tokens de entrada):
+  ('supervision', '800x600', 'normal', 0.9, 920)
+  ('fin de impresion', '1600x1200', 'pieza', 0.86, 4910)
+  ('verificacion, intento 1', '1600x1200', 'libre', 0.93, 4910)
+Intervenciones del operador: [('confirmar', 1.0), ('confirmar plataforma libre', None)]
+Trabajo registrado: [('A_umbral_maximo.3mf', 'retirada', 1, 269.0), ('A_umbral_maximo.3mf', None, 0, None)]
+Resultado: retirada, intentos 1; esperado ('retirada', 1): CORRECTO
+==============================================================================
+Escenario B_falla_y_reintento (umbral 0.85): Falla en la supervision: segunda consulta, pausa, aviso, el operador cancela y la remocion de la pieza fallida necesita dos intentos.
+Conversacion:
+  [OPERADOR] /referencia
+  [BOT] (foto) Guardé la referencia de la plataforma vacía (1600 x 1200).
+Consultas al modelo (tipo, resolucion, veredicto, confianza, tokens de entrada):
+  ('supervision', '800x600', 'falla', 0.82, 920)
+  ('confirmacion de falla', '1600x1200', 'falla', 0.91, 2630)
+  ('verificacion, intento 1', '1600x1200', 'pieza', 0.88, 4910)
+  ('verificacion, intento 2', '1600x1200', 'libre', 0.93, 4910)
+Intervenciones del operador: [('cancelar', 1.0)]
+Trabajo registrado: [('B_falla_y_reintento.3mf', 'retirada', 2, 317.0), ('B_falla_y_reintento.3mf', None, 0, None)]
+Resultado: retirada, intentos 2; esperado ('retirada', 2): CORRECTO
+==============================================================================
+Escenario C_confianza_alta (umbral 0.85): Umbral ya calibrado en 0.85: con confianza 0.86 el ciclo empieza sin preguntar.
+Conversacion:
+  [OPERADOR] /referencia
+  [BOT] (foto) Guardé la referencia de la plataforma vacía (1600 x 1200).
+Consultas al modelo (tipo, resolucion, veredicto, confianza, tokens de entrada):
+  ('supervision', '800x600', 'normal', 0.9, 920)
+  ('fin de impresion', '1600x1200', 'pieza', 0.86, 4910)
+  ('verificacion, intento 1', '1600x1200', 'libre', 0.93, 4910)
+Intervenciones del operador: []
+Trabajo registrado: [('C_confianza_alta.3mf', 'retirada', 1, 228.0), ('C_confianza_alta.3mf', None, 0, None)]
+Resultado: retirada, intentos 1; esperado ('retirada', 1): CORRECTO
+==============================================================================
+Escenario D_objeto_ajeno (umbral 0.85): Escena anomala al terminar: el orquestador pide confirmacion y el operador cancela.
+Conversacion:
+  [OPERADOR] /referencia
+  [BOT] (foto) Guardé la referencia de la plataforma vacía (1600 x 1200).
+Consultas al modelo (tipo, resolucion, veredicto, confianza, tokens de entrada):
+  ('supervision', '800x600', 'normal', 0.9, 920)
+  ('fin de impresion', '1600x1200', 'anomala', 0.74, 4910)
+Intervenciones del operador: [('cancelar', 1.0)]
+Trabajo registrado: [('D_objeto_ajeno.3mf', None, 0, None), ('D_objeto_ajeno.3mf', None, 0, None)]
+Resultado: None, intentos 0; esperado (None, 0): CORRECTO
+==============================================================================
+Todos los escenarios correctos.

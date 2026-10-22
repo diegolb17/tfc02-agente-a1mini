@@ -1,0 +1,92 @@
+% Diagrama 1. Estados del ciclo completo, en TikZ.
+% 21 oct 2026 (marcas de Diego): la supervision muestra la captura y el analisis cada 10 min; la autorizacion del
+% operador solo se pide si la confianza del agente es baja; "boton de emergencia" en lugar de "seta"; las
+% referencias a otros diagramas van por su nombre; ningun rotulo cae sobre una flecha.
+% Convención: borde discontinuo = estado propuesto (P), no fijado en la tesis.
+% Compilar: pdflatex D1_estados_ciclo_tikz.tex
+\documentclass[border=4pt]{standalone}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish,es-noshorthands]{babel}
+\usepackage{times}
+\usepackage{amssymb}
+\usepackage{tikz}
+\usetikzlibrary{positioning,calc}
+
+\begin{document}
+\begin{tikzpicture}[
+  font=\fontsize{8}{9.6}\selectfont,
+  est/.style   = {draw, rounded corners=4pt, fill=white, align=center,
+                  text width=3.15cm, minimum height=0.95cm, inner sep=3pt,
+                  execute at begin node={\hyphenpenalty=10000\relax}},
+  prop/.style  = {est, dashed},
+  sub/.style   = {est, text width=2.35cm, minimum height=0.8cm},
+  alto/.style  = {est, fill=black!10, text width=3.0cm},
+  fl/.style    = {->, >=latex, semithick},
+  et/.style    = {font=\fontsize{6.8}{8}\selectfont, inner sep=1.2pt, fill=white, align=center}]
+
+% ---------------- estados ----------------
+\node[est]  (R)  at (0,0)     {Reposo\\placa libre};
+\node[est]  (S)  at (0,-1.8)  {Supervisión de la impresión: captura y análisis por el agente cada 10 min};
+\node[est]  (E1) at (0,-3.6)  {\textbf{Etapa 1}: enfriamiento\\ventilador al 100\,\%, 2.9 min (máx. 6)};
+\node[est]  (PC) at (0,-5.4)  {Precondiciones: pieza presente; autorización del operador solo si la confianza es baja};
+\node[est]  (E2) at (0,-7.2)  {\textbf{Etapa 2}: flexión\\hasta 35 mm por posición, 6.9 s (máx. 12)};
+% etapa 3, compuesta con dos regiones concurrentes
+\draw[rounded corners=4pt, fill=black!3] (-3.1,-8.15) rectangle (3.1,-10.05);
+\node at (0,-8.4) {\textbf{Etapa 3}: evacuación (regiones concurrentes)};
+\draw[dashed] (0,-8.65) -- (0,-9.95);
+\node[sub]  (RT) at (-1.55,-9.3) {Retorno del actuador};
+\node[sub]  (BA) at (1.55,-9.3)  {Barrido del cabezal a tres cotas, 30 s (máx. 60)};
+\coordinate (E3n) at (0,-8.15);
+\coordinate (E3s) at (0,-10.05);
+\node[est]  (E4) at (0,-11.1) {\textbf{Etapa 4}: verificación\\cámara y agente remoto, 5 s (máx. 30)};
+\node[est, text width=2.6cm] (PA) at (5.7,-1.8) {Impresión en pausa (espera del usuario)};
+\node[est, fill=black!6, text width=2.8cm] (ES) at (5.7,-5.4) {Espera de intervención humana (Telegram)};
+\node[est, text width=2.6cm] (RI) at (5.7,-11.1) {Reintento\\hasta 3 intentos};
+\node[prop, text width=2.6cm] (SR) at (-5.4,-11.1) {Sin red (P)\\actuador retraído};
+
+% marco de la operación normal y parada de emergencia
+\draw[rounded corners=6pt, semithick] (-7.9,0.95) rectangle (8.6,-13.0);
+\node[anchor=north west, font=\fontsize{8}{9.6}\selectfont\itshape] at (-7.8,0.9) {Operación normal (botón de emergencia liberado)};
+\node[alto] (P) at (5.7,2.25) {\textbf{Parada de emergencia}\\+24V\_ACT cortado};
+\fill (-0.6,1.7) circle (2.2pt);
+
+% ---------------- transiciones ----------------
+\draw[fl] (-0.6,1.7) -- (-0.6,0.475);
+\draw[fl] (R) -- node[et, right=2pt] {inicio de impresión} (S);
+\draw[fl] (S) -- node[et, right=2pt] {fin de impresión} (E1);
+\draw[fl] (E1) -- node[et, right=2pt] {T $\leq$ 38.7 °C (dato de la impresora)} (PC);
+\draw[fl] (PC) -- node[et, right=2pt] {confianza alta, o autoriza} (E2);
+\draw[fl] (E2) -- node[et, right=2pt] {fin de extensión} (E3n);
+\draw[fl] (E3s) -- node[et, right=2pt] {cabezal en reposo} (E4);
+
+% pausa durante la impresion
+\draw[fl] ($(S.east)+(0,0.2)$) -- node[et, above=1pt] {falla\\confirmada} ($(PA.west)+(0,0.2)$);
+\draw[fl] ($(PA.west)+(0,-0.2)$) -- node[et, below=1pt] {reanudar} ($(S.east)+(0,-0.2)$);
+\draw[fl] (PA.south) -- (5.7,-3.2) -- node[et, above=1pt, pos=0.5] {cancelar: pieza fallida} (1.6,-3.2);
+
+% hacia la espera de intervencion
+\draw[fl] ($(E1.east)+(0,-0.25)$) -- (4.7,-3.85) -- node[et, right=2pt, pos=0.45] {más de 6 min:\\ventilador sin efecto} (4.7,0 |- ES.north);
+\draw[fl] (PC.east) -- node[et, above=1pt, pos=0.45] {confianza baja:\\deniega o 30 min (P)} (ES.west);
+\draw[fl] ($(ES.east)+(0,0.2)$) -- (7.5,-5.2) -- (7.5,0) -- node[et, above=1pt, pos=0.5] {pieza retirada} (R.east);
+
+% retorno a reposo por la izquierda
+\draw[fl] (PC.west) -- (-2.6,-5.4) -- node[et, left=2pt, pos=0.45] {placa ya libre} (-2.6,-0.2) -- ($(R.west)+(0,-0.2)$);
+\draw[fl] (E4.south) -- (0,-12.15) -- (-7.5,-12.15) -- node[et, right=2pt, pos=0.5] {placa libre} (-7.5,0.2) -- ($(R.west)+(0,0.2)$);
+
+% reintento
+\draw[fl] (E4.east) -- node[et, above=1pt] {pieza retenida} (RI.west);
+\draw[fl] (4.8,0 |- RI.north) -- node[et, right=2pt, pos=0.3] {intento $<$ 3} (4.8,-7.2) -- (E2.east);
+\draw[fl] (6.6,0 |- RI.north) -- node[et, right=2pt, pos=0.5] {intentos\\agotados} (6.6,0 |- ES.south);
+
+% sin red
+\draw[fl] (-3.1,-8.9) -- (-4.9,-8.9) -- node[et, left=2pt, pos=0.5] {sin enlace (P), o cabezal\\sin reposo en 60 s} (-4.9,0 |- SR.north);
+\draw[fl] ($(E4.west)+(0,0.2)$) -- node[et, above=1pt] {sin respuesta\\en 30 s} ($(SR.east)+(0,0.2)$);
+\draw[fl] ($(SR.east)+(0,-0.2)$) -- node[et, below=1pt] {red recuperada} ($(E4.west)+(0,-0.2)$);
+\draw[fl] (SR.south) -- (-5.4,-12.65) -- node[et, above=1pt, pos=0.66] {más de 10 min sin red (P)} (8.1,-12.65) -- (8.1,-5.6) -- ($(ES.east)+(0,-0.2)$);
+
+% parada de emergencia
+\draw[fl] (7.2,0.95) -- node[et, right=2pt] {botón de emergencia\\pulsado (D35 = 0 V)} (7.2,1.8);
+\draw[fl] (P.west) -- node[et, above=1pt] {rearme: orden del operador} (0.6,2.25) -- (0.6,0.475);
+\end{tikzpicture}
+\end{document}

@@ -1,0 +1,43 @@
+#VRML V2.0 utf8
+# Placa ESP32 DevKit V1 de 30 contactos
+# Generado por generar_devkit.py para el TFC de Diego Luna
+Transform {
+  children [
+  Transform {
+    translation 0.0000 0.0000 0.3150
+    children [
+      Shape {
+        appearance Appearance { material Material {
+          diffuseColor 0.050 0.250 0.120
+          specularColor 0.1 0.1 0.1
+        } }
+        geometry Box { size 11.1417 20.2756 0.6299 }
+      }
+    ]
+  }
+  Transform {
+    translation 0.0000 3.1496 1.2598
+    children [
+      Shape {
+        appearance Appearance { material Material {
+          diffuseColor 0.720 0.700 0.660
+          specularColor 0.1 0.1 0.1
+        } }
+        geometry Box { size 7.0866 10.0394 1.2598 }
+      }
+    ]
+  }
+  Transform {
+    translation 0.0000 -9.3504 1.1417
+    children [
+      Shape {
+        appearance Appearance { material Material {
+          diffuseColor 0.550 0.550 0.580
+          specularColor 0.1 0.1 0.1
+        } }
+        geometry Box { size 2.9921 2.2835 1.0236 }
+      }
+    ]
+  }
+  ]
+}

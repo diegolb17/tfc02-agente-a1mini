@@ -1,0 +1,8 @@
+# Secretos y datos locales: nunca al repositorio
+.env
+datos/
+pruebas/datos_simulacion/
+__pycache__/
+*.pyc
+*.log
+*.sqlite

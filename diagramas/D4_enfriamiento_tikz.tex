@@ -1,0 +1,59 @@
+% Diagrama 4. Temporización de la etapa de enfriamiento, en TikZ (19 oct 2026).
+% Sustituye al antiguo "lazo térmico" (D4_lazo_termico_tikz.tex): desde la revisión del 15 de octubre no hay
+% regulación ni termistor. El ventilador trabaja al 100 % y la etapa termina por la temperatura que informa la
+% impresora o, sin ese dato, por el tiempo máximo. (P) = propuesto, no fijado en la tesis.
+% Compilar: pdflatex D4_enfriamiento_tikz.tex
+\documentclass[border=4pt]{standalone}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish,es-noshorthands]{babel}
+\usepackage{times}
+\usepackage{amssymb}
+\usepackage{tikz}
+\input{estilo_diagramas}
+
+\begin{document}
+\begin{tikzpicture}[base]
+% columna del microcontrolador
+\node[term] (A)  at (0,0)      {Orden de la unidad de procesamiento: inicio de la etapa 1};
+\node[proc] (B)  at (0,-1.45)  {D27 a 100\,\% (25 kHz): ventilador a 24 V permanente; temporizador $t = 0$};
+\node[dec, text width=1.75cm] (C) at (0,-3.35) {¿Pulsos del tacómetro (D4) a los 5 s? (P)};
+\node[proc] (D)  at (0,-5.25)  {Recibe por UART la temperatura de la plataforma, $T$};
+\node[dec]  (E)  at (0,-7.0)   {¿$T \leq$ 38.7 °C?};
+\node[dec, text width=1.5cm]  (F)  at (0,-9.0)   {¿$t \geq$ 6 min?};
+\node[dec, text width=1.7cm]  (G)  at (0,-11.0)  {¿Hubo dato de $T$ en el último minuto?};
+\node[proc, text width=2.3cm] (H)  at (4.1,-7.0) {D27 a 0\,\%: fin de la etapa 1};
+\node[term, text width=2.3cm] (I)  at (4.1,-8.6) {Etapa 2: flexión};
+\node[falla, text width=2.5cm] (J) at (4.1,-3.35) {Ventilador detenido: corte y aviso al operador};
+\node[falla, text width=2.5cm] (K) at (4.1,-12.6) {Enfriamiento sin efecto: D27 a 0\,\% y aviso al operador};
+\node[proc, text width=2.5cm] (L) at (-4.1,-11.0) {Fin por tiempo: con 6 min la placa ya está bajo el umbral};
+
+\draw[fl] (A) -- (B);
+\draw[fl] (B) -- (C);
+\draw[fl] (C.east) -- node[et, above] {no} (J.west);
+\draw[fl] (C) -- node[et, right=1pt] {sí} (D);
+\draw[fl] (D) -- (E);
+\draw[fl] (E.east) -- node[et, above] {sí} (H.west);
+\draw[fl] (H) -- (I);
+\draw[fl] (E) -- node[et, right=1pt] {no, o sin dato} (F);
+\draw[fl] (F) -- node[et, right=1pt] {sí} (G);
+\draw[ln] (F.west) -- node[et, above, pos=0.5] {no} (-2.6,-9.0) -- (-2.6,-4.4);
+\draw[fl] (-2.6,-4.4) -- (0,-4.4);
+\node[union] at (0,-4.4) {};
+\draw[fl] (G.east) -- node[et, above, pos=0.55] {sí} (2.4,-11.0) -- (2.4,-12.6) -- (K.west);
+\draw[fl] (G.west) -- node[et, above] {no} (L.east);
+\node[term, text width=2.3cm] (I2) at (-4.1,-12.6) {Etapa 2: flexión};
+\draw[fl] (L) -- (I2);
+
+\draw[marco] (-5.6,1.45) rectangle (5.6,-13.55);
+\node[tmarco] at (-5.5,1.4) {Microcontrolador (la temporización vive aquí, sigue sin red)};
+
+% columna de la unidad de procesamiento
+\node[proc, text width=3.3cm] (P1) at (9.3,-4.0) {\textbf{Unidad de procesamiento}: lee la temperatura de la plataforma que publica la impresora (MQTT, red local)};
+\node[proc, text width=3.3cm] (P2) at (9.3,-6.1) {La reenvía al microcontrolador por UART, cada 2 s (P)};
+\draw[fl] (P1) -- (P2);
+\draw[fl] (P2.west) -- (5.9,-6.1) -- (5.9,-5.25) -- (D.east);
+\node[nota, text width=3.3cm] at (9.3,-8.3) {Si se cae la red, el dato deja de llegar y la etapa termina por los 6 min.};
+\node[nota, text width=3.3cm] at (9.3,-10.2) {En cualquier punto: botón de emergencia pulsado, corte de +24V\_ACT (parada de emergencia del diagrama de estados).};
+\end{tikzpicture}
+\end{document}
