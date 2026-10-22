@@ -45,7 +45,8 @@ def mec_2_13(codigo, nombre, titulo):
     titulo_vista(lam, 320, 145, 'ISOMÉTRICA', '2:1')
     notas = NOTAS_FDM + [
         'Cierra el canal del soporte MEC-2-12 y aprieta el cuerpo del actuador contra el fondo del canal.',
-        'Fijación con 4 tornillos M4 x 14 sobre los insertos roscados del soporte (tapa 5 + rosca útil 9 en el inserto de 10); par 0.5 N·m.',
+        'Fijación con 4 tornillos ISO 4762 M4 x 12 sobre los insertos roscados del soporte (tapa 5, holgura 0.5 y rosca útil 6.5 en el inserto de 10); par 0.5 N·m.',
+        'Bajo la tapa, el tornillo M4 x 55 del soporte MEC-2-12 retiene el actuador por su agujero posterior (MEC-1-05).',
         'Orientación de impresión: cara de 40 x 24 sobre la cama.',
     ]
     lam.estampar(_datos(codigo, titulo, '2:1', nombre), notas)

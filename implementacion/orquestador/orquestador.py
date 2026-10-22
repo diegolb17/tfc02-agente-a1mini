@@ -51,16 +51,20 @@ class Orquestador:
         self.recordatorio = None
         self.pendientes: dict[str, dict] = {}     # confirmaciones en espera
         self.cancelada_por_falla = False
+        self.trabajo_fallido = False               # la impresion se cancelo por una falla
         self.sin_red = False
         self.esperando_verificacion = None         # intento en duda, a la espera del operador
         self.inicio_espera_falla = None
         self._parar = False
+        self.panel = None                          # envio al panel de Cloudflare, si esta configurado
         impresora.al_cambiar_estado(lambda n, a: self.cola.put(("impresora", n, a)))
 
     # Bucle principal ----------------------------------------------------------
     def ejecutar(self, duracion: float | None = None) -> None:
         fin = time.monotonic() + duracion if duracion else None
         self.telegram.escuchar(self.cola)
+        if self.panel:
+            self.panel.escuchar(self.telegram)
         while not self._parar and (fin is None or time.monotonic() < fin):
             if hasattr(self.impresora, "avanzar"):
                 self.impresora.avanzar()
@@ -78,6 +82,9 @@ class Orquestador:
     def detener(self) -> None:
         self._parar = True
         self.telegram.detener()
+        if self.panel:
+            self.panel.detener()
+            self.panel.sincronizar()               # ultima vuelta: lo que falte queda pendiente
 
     def _atender(self, evento) -> None:
         tipo = evento[0]
@@ -132,6 +139,7 @@ class Orquestador:
             self.recordatorio = None
             if self.cancelada_por_falla:
                 self.cancelada_por_falla = False
+                self.trabajo_fallido = True
                 self.f.ciclo.remocion_autorizada = True       # el operador eligio cancelar
                 self.telegram.enviar(M.REMOCION_FALLIDA)
                 self.f.iniciar_remocion()
@@ -144,7 +152,7 @@ class Orquestador:
         self.f.capturar_imagen("supervision")
         captura = self.f.ciclo.capturas["supervision"]
         v = self.agente.inspeccionar("supervision", [captura], estado)
-        self._registrar_captura("supervision", "800x600", captura, v)
+        self._registrar_captura("supervisión", f"{captura.ancho}x{captura.alto}", captura, v)
         if not v.valido:
             if not self.sin_red:
                 self.sin_red = True
@@ -160,7 +168,7 @@ class Orquestador:
         self.f.capturar_imagen("verificacion")
         completa = self.f.ciclo.capturas["verificacion"]
         v2 = self.agente.inspeccionar("confirmacion_falla", [completa], estado)
-        self._registrar_captura("confirmacion de falla", f"{completa.ancho}x{completa.alto}", completa, v2)
+        self._registrar_captura("confirmación de falla", f"{completa.ancho}x{completa.alto}", completa, v2)
         if not (v2.valido and v2.clase == "falla" and v2.confianza >= self.config.umbral_falla):
             self.registro.evento("falla no confirmada", v2.descripcion or v2.error)
             return
@@ -194,7 +202,7 @@ class Orquestador:
         captura = self.f.ciclo.capturas["verificacion"]
         referencia = self.camara_referencia()
         v = self.agente.inspeccionar("fin", [referencia, captura], estado)
-        self._registrar_captura("fin de impresion", f"{captura.ancho}x{captura.alto}", captura, v)
+        self._registrar_captura("fin de impresión", f"{captura.ancho}x{captura.alto}", captura, v)
         umbral = self.config.umbral_confianza
         if v.valido and v.clase == "libre" and v.confianza >= umbral:
             self.registro.cerrar_trabajo("sin pieza")
@@ -229,7 +237,7 @@ class Orquestador:
             mensaje = self.telegram.enviar(texto, botones)
         self.pendientes[clave] = {"accion": accion, "vence": time.monotonic() + self.config.plazo_confirmacion,
                                   "mensaje": mensaje, "inicio": time.time()}
-        self.registro.evento("confirmacion solicitada", f"{accion}: {motivo}")
+        self.registro.evento("confirmacion solicitada", motivo)
 
     # Botones ------------------------------------------------------------------
     def _boton(self, dato: str, consulta_id, mensaje_id) -> None:
@@ -287,6 +295,8 @@ class Orquestador:
             return
         self._intervencion("confirmar" if si else "cancelar", p["inicio"])
         if not si:
+            if p["accion"] == "iniciar_remocion":
+                self.registro.cerrar_trabajo("cancelada")
             self.telegram.enviar(M.REMOCION_CANCELADA if p["accion"] == "iniciar_remocion"
                                  else "Entendido, no lo hago.")
             return
@@ -309,7 +319,10 @@ class Orquestador:
         elif tipo == "verificar":
             self._verificar(detalle)
         elif tipo == "fin":
-            self.registro.cerrar_trabajo(detalle["resultado"], detalle["intentos"], detalle["tiempo_ciclo_s"])
+            # Tabla 22: una impresion cancelada por falla queda como fallida aunque la pieza se retire.
+            resultado = "fallida" if self.trabajo_fallido and detalle["resultado"] == "retirada" else detalle["resultado"]
+            self.trabajo_fallido = False
+            self.registro.cerrar_trabajo(resultado, detalle["intentos"], detalle["tiempo_ciclo_s"])
             captura = self.f.ciclo.capturas.get("verificacion")
             if detalle["resultado"] == "retirada":
                 texto = M.retirada(detalle["intentos"])
@@ -336,7 +349,7 @@ class Orquestador:
                                       [[("Sí, está libre", "verif:libre"), ("No, reintentar", "verif:pieza")]])
             return
         v = self.agente.inspeccionar("verificacion", [self.camara_referencia(), captura], estado)
-        self._registrar_captura(f"verificacion, intento {intento}", f"{captura.ancho}x{captura.alto}", captura, v)
+        self._registrar_captura(f"verificación, intento {intento}", f"{captura.ancho}x{captura.alto}", captura, v)
         umbral = self.config.umbral_confianza
         if v.valido and v.clase == "libre" and v.confianza >= umbral:
             self.micro.resultado_verificacion(True)
@@ -390,7 +403,7 @@ class Orquestador:
             self.f.capturar_imagen("verificacion")
             captura = self.f.ciclo.ultima_captura
             self.config.referencia.write_bytes(captura.jpeg)
-            self.registro.evento("referencia", str(self.config.referencia))
+            self.registro.evento("referencia", "imagen de referencia de la plataforma vacía actualizada")
             self.telegram.enviar_foto(captura.jpeg, f"Guardé la referencia de la plataforma vacía "
                                                     f"({captura.ancho} x {captura.alto}).")
         elif orden == "detener":

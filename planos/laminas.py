@@ -16,8 +16,9 @@ from motor.hoja import (Lamina, Vista, cota, cota_alineada, nota, cota_diametro,
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
 SALIDA = os.path.join(AQUI, 'laminas')
-FECHA = '21.10.2026'
-REVISION = 'C'          # C: alojamientos del actuador, extractor de 30 mm y cuello del aro (21 oct 2026)
+FECHA = '22.10.2026'
+REVISION = 'D'          # D: interfaz con la impresora, tornillería con longitud y eje del actuador (22 oct 2026)
+#                        C: alojamientos del actuador, extractor de 30 mm y cuello del aro (21 oct 2026)
 X, Y, Z = np.eye(3)
 
 NOTAS_FDM = [
@@ -95,14 +96,20 @@ def mec_2_12(codigo, nombre, titulo):
     cota(lam, s, (-24, 308, zc), (-13, 308, zc), s.rect[0] - 13, 'v')                     # 11 inserto
     # ---- lateral (desde la izquierda) ----
     cota(lam, l, (-24, yb, 0), (0, yb, 0), l.rect[3] + 6, 'h')                           # 24
+    # 22 oct 2026: eje del agujero posterior del actuador (X -15.5, Z 9), pasante según Y, inserto desde Y 324
+    eje_circulo(lam, l, (-15.5, yb, 9), 2.8)
+    lam.circulo(l.m((-15.5, yb, 9)), 2.25 * E, 'visible')
+    cota(lam, l, (-24, yb, 0), (-15.5, yb, 9), l.rect[2] + 6, 'v')                       # 9
+    cota(lam, l, (-24, yb, 9), (-15.5, yb, 9), l.rect[1] - 7, 'h')                       # 8.5
+    nota(lam, l, (-15.5 - 2.0, yb, 9 + 2.0), ['Ø5.6 prof. 11 (INSERTO M4 x 10)', 'Ø4.5 PASANTE (EJE DEL ACTUADOR)'], 14, 15, tam=2.8)
     # ---- isométrica ----
     v_iso = iso(lam, pz, 1.0, (335, 215), dir=(1, -1, -0.7), up=Z)
     v_iso.dibujar(lam)
     titulo_vista(lam, 335, 160, 'ISOMÉTRICA', '1:1')
     notas = NOTAS_FDM + [
-        'Insertos roscados de latón M4 x 10 colocados en caliente en los cuatro agujeros Ø5.6.',
+        'Insertos roscados de latón M4 x 10 colocados en caliente en los cinco agujeros Ø5.6.',
         'Orientación de impresión: cara de 60 x 44 (fondo del canal hacia arriba) sobre la cama, sin soportes.',
-        'El actuador queda apretado entre el fondo del canal y la tapa MEC-2-13; no se atornilla.',
+        'El actuador queda apretado entre el fondo del canal y la tapa MEC-2-13 y lo retiene un tornillo ISO 4762 M4 x 55 por su agujero posterior, que entra por la cara opuesta al inserto (MEC-1-05).',
     ]
     lam.estampar(_datos(codigo, titulo, '2:1', nombre), notas)
     return lam

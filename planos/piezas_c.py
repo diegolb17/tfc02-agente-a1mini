@@ -111,6 +111,24 @@ def _origen(lam, p):
     lam.texto(p[0] - 2.0, p[1] - 4.4, 'O', 2.4, 0, 'c', negrita=True)
 
 
+def _lineas_notas(notas):
+    """Líneas que ocupan las notas en el bloque del cajetín (mismo corte de palabras que cajetin_pucp)."""
+    import fitz
+    tn, ancho = 8.2, (180 - 2) * 72 / 25.4
+    n = 0
+    for i, s in enumerate(notas, 1):
+        actual, pref = '', '%d. ' % i
+        n += 1
+        for w in s.split():
+            prueba = (actual + ' ' + w).strip()
+            if fitz.get_text_length(pref + prueba, fontname='helv', fontsize=tn) > ancho and actual:
+                n += 1
+                actual, pref = w, '    '
+            else:
+                actual = prueba
+    return n
+
+
 def lamina_estandar(codigo, nombre, titulo, escala, dir_frente, up, lateral='izq', iso_dir=(-1, -1, -0.8),
                     notas_extra=(), centro=(105, 200), sep=24, iso_pos=(335, 210), iso_escala=None,
                     ocultas=True, angulo_cuna=False, extra=None):
@@ -269,7 +287,8 @@ def lamina_estandar(codigo, nombre, titulo, escala, dir_frente, up, lateral='izq
         notas.append('Redondeos no acotados: %s.' % ' y '.join('R%g' % x for x in redondeos))
     notas.append('Origen O: vértice de mín X, mín Y, mín Z de la pieza. Long.: longitud del agujero según su eje.')
     notas.append('Geometría completa según el modelo 3D nativo TFC_Sistema_A1mini_v3; aquí se acotan interfaces y funciones.')
-    tope_notas = 73.2 + 4.2 * len(notas)      # medido: cabecera NOTAS a 71.7 + 4.2 n mm del borde inferior, mas 1.5 de holgura
+    # medido: cabecera NOTAS a 71.7 + 4.2 n mm del borde inferior, mas 1.5 de holgura; n cuenta las líneas partidas
+    tope_notas = 73.2 + 4.2 * _lineas_notas(notas)
 
     # 15 oct (N-09): texto de 2.8 mm, el de las listas de piezas, para que la altura de mayúscula supere 2 mm en A3
     col = [('Marca', 13, 'c'), ('Rasgo', 27, 'c'), ('Eje', 19, 'c'), ('X', 15, 'c'), ('Y', 15, 'c'),
@@ -397,25 +416,52 @@ def _detalle_ventana(lam, pz, l, cv):
     nota(lam, d, q, ['REBAJE INTERIOR 54 x 31', 'PROF. 2 (PARED 2)'], 22, 24, tam=3.0, hoja=True)
 
 
-def _registrar(codigo, nombre, titulo, notas, iso_dir, lateral, cuna, extra=None):
+def _cavidad(y_borde, x_cota):
+    """22 oct 2026 (P12): interfaz con la impresora, acotada en MEC-1-01. En la planta se acota el borde lateral de
+    la cavidad desde el origen O; el resto de la cavidad va en la nota de la lámina."""
+    def _fn(lam, f, p, l, mn, mx):
+        from laminas import cota as _cota
+        _cota(lam, p, (x_cota, mn[1], mx[2]), (x_cota, y_borde, mx[2]), p.rect[2] + 6, 'v')
+        return None
+    return _fn
+
+
+def _y(*fns):
+    """Encadena varias funciones extra; devuelve el centro de detalle que alguna pida."""
+    def _fn(lam, f, p, l, mn, mx):
+        cv = None
+        for g in fns:
+            r = g(lam, f, p, l, mn, mx)
+            cv = r if r is not None else cv
+        return cv
+    return _fn
+
+
+def _registrar(codigo, nombre, titulo, notas, iso_dir, lateral, cuna, extra=None, iso_escala=None):
     @lamina(codigo, nombre, titulo)
     def _fn(codigo, nombre, titulo):
         return lamina_estandar(codigo, nombre, titulo, 0.5, Y, Z, lateral=lateral, iso_dir=iso_dir,
                                notas_extra=notas, centro=(110, 200), sep=16, iso_pos=(330, 232),
-                               angulo_cuna=cuna, extra=extra)
+                               angulo_cuna=cuna, extra=extra, iso_escala=iso_escala)
     return _fn
 
 
 _registrar('MEC-2-01', 'Cuna_frontal_derecha', 'ESTRUCTURA, CUARTO FRONTAL DERECHO', NOTAS_CUNA + (
-    'Ventana de 36 x 54.1 en la cara inclinada; en planta mide 36 x 50.8.',), (-1, -1, -0.8), 'izq', True,
-    extra=_ventana_inclinada)
+    'Ventana de 36 x 54.1 en la cara inclinada; en planta mide 36 x 50.8.',
+    'Cavidad de la impresora (MEC-1-01): borde de la pared de retención a X 11.3 y de la pared lateral a Y 127 desde O; suelo 5 mm bajo el borde, de 4 mm.',), (-1, -1, -0.8), 'izq', True,
+    extra=_y(_ventana_inclinada, _cavidad(127.0, 120.0)))
 _registrar('MEC-2-02', 'Cuna_frontal_izquierda', 'ESTRUCTURA, CUARTO FRONTAL IZQUIERDO', NOTAS_CUNA + (
-    'Agujero Ø22.5 de la cara lateral: botón de emergencia S2 (ver ELE-0-01).',), (-1, 1, -0.8), 'der', True)
+    'Agujero Ø22.5 de la cara lateral: botón de emergencia S2 (ver ELE-0-01).',
+    'Cavidad de la impresora (MEC-1-01): borde de la pared de retención a X 11.3 y de la pared lateral a Y 158 desde O; suelo 5 mm bajo el borde, de 4 mm.',), (-1, 1, -0.8), 'der', True,
+    extra=_cavidad(328.0, 120.0))
 _registrar('MEC-2-03', 'Cuna_posterior_derecha', 'ESTRUCTURA, CUARTO POSTERIOR DERECHO', NOTAS_CUNA + (
     'Agujeros 1 a 4 (Ø4): insertos M3 x 4 en los pilares de los dos tabiques bajo el techo, para el soporte de la cámara MEC-2-14.',
-    'Agujero 17: paso del cable de la cámara (Ø8), en el eje del tubo del soporte.',),
-    (1, -1, -0.8), 'izq', True)
-_registrar('MEC-2-04', 'Cuna_posterior_izquierda', 'ESTRUCTURA, CUARTO POSTERIOR IZQUIERDO', NOTAS_CUNA, (1, 1, -0.8), 'der', True)
+    'Agujero 17: paso del cable de la cámara (Ø8), en el eje del tubo del soporte.',
+    'Cavidad de la impresora (MEC-1-01): borde del nervio posterior a X 146.9 y de la pared lateral a Y 127 desde O; suelo 5 mm bajo el borde, de 4 mm.',),
+    (1, -1, -0.8), 'izq', True, extra=_cavidad(127.0, 250.0))
+_registrar('MEC-2-04', 'Cuna_posterior_izquierda', 'ESTRUCTURA, CUARTO POSTERIOR IZQUIERDO', NOTAS_CUNA + (
+    'Cavidad de la impresora (MEC-1-01): borde del nervio posterior a X 146.9 y de la pared lateral a Y 158 desde O; suelo 5 mm bajo el borde, de 4 mm.',), (1, 1, -0.8), 'der', True,
+    extra=_cavidad(328.0, 250.0))
 _registrar('MEC-2-05', 'Bandeja_frontal_derecha', 'BANDEJA, CUARTO FRONTAL DERECHO', NOTAS_BANDEJA + (
     'Ø4.2: insertos roscados M3 para los 2 tornillos M3 de la rejilla de admisión MEC-2-11.',
     'Ventana de 148 x 28 de la pared frontal, sobre el suelo: paso del aire de la rejilla MEC-2-11.',), (-1, -1, -0.8), 'izq', False,
@@ -427,7 +473,7 @@ _registrar('MEC-2-06', 'Bandeja_frontal_izquierda', 'BANDEJA, CUARTO FRONTAL IZQ
 _registrar('MEC-2-07', 'Bandeja_posterior_derecha', 'BANDEJA, CUARTO POSTERIOR DERECHO', NOTAS_BANDEJA + (
     'Ventana del módulo de entrada IEC 60320 C14 con interruptor y portafusible (X1, ELE-0-01): detalle V.',
     'Pared rebajada a 2 mm (rebaje interior de 54 x 31 x 2) para el encaje de los clips del módulo.',), (1, -1, -0.8), 'izq', False,
-    extra=_ventana_entrada_red)
+    extra=_ventana_entrada_red, iso_escala=0.25)   # 22 oct: con la isométrica a 1:3 la tabla bajaba sobre el detalle V
 _registrar('MEC-2-08', 'Bandeja_posterior_izquierda', 'BANDEJA, CUARTO POSTERIOR IZQUIERDO', NOTAS_BANDEJA + (
     'Ø28 y 4 x Ø3.2 a 24 mm de la pared posterior: ventilador de extracción de 30 x 30 x 10 mm, fijado con 4 tornillos M3.',),
     (1, 1, -0.8), 'der', False)

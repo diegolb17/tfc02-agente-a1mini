@@ -8,7 +8,8 @@ Contiene el código de la implementación parcial del dominio de software y los 
 
 | Carpeta | Contenido |
 |---|---|
-| `implementacion/` | Orquestador en Python: bot de Telegram, cliente MQTT de la impresora, cámara integrada de la A1 mini, servidor MCP con las nueve funciones del agente, agente con GPT-5.4 mini, registro SQLite y prueba de simulación |
+| `implementacion/` | Orquestador en Python: bot de Telegram, cliente MQTT de la impresora, cámara integrada de la A1 mini, servidor MCP con las nueve funciones del agente, agente con GPT-5.4 mini, registro SQLite con envío al panel y pruebas |
+| `implementacion/panel/` | Página de administración en Cloudflare Workers con D1 y R2: esquema de la base de datos (Tabla 22 de la tesis), páginas de la Tabla 23 y sincronización con el orquestador |
 | `calculos/` | Guiones de las memorias de cálculo (enfriamiento, vuelco, costos, potencia) y sus resultados en JSON |
 | `planos/` | Generadores de las láminas mecánicas y eléctricas con un motor de dibujo propio (`motor/`) y los guiones de exportación desde Fusion 360 (`fusion/`) |
 | `electronica/` | Guiones que generan el esquemático y la placa en KiCad, y el proyecto `TFC_Remocion` con su verificación eléctrica y de reglas de diseño |
@@ -35,6 +36,10 @@ Modos de ejecución:
 | `python -m orquestador` | Sistema real: requiere la impresora en modo LAN y modo desarrollador y la variable `OPENAI_API_KEY` |
 | `python -m orquestador.servidor_funciones` | Lanza solo el servidor MCP por stdio, con impresora simulada, para inspeccionar sus funciones |
 | `python pruebas/prueba_simulacion.py` | Prueba de punta a punta en cuatro escenarios; deja la salida en `pruebas/salida_simulacion.txt` |
+| `python pruebas/prueba_modelo_real.py` | 20 consultas reales a GPT-5.4 mini con las imágenes de prueba: tokens, latencia y costo en `pruebas/salida_modelo_real.txt` |
+| `python pruebas/poblar_panel.py` | Envía al panel tres ciclos simulados completos |
+| `python pruebas/capturas_panel.py` | Capturas de pantalla de cada página del panel con Edge sin interfaz (Playwright) |
+| `python pruebas/demo_telegram.py` | Conversación tipo hacia el chat del operador, con impresora simulada |
 
 Criterios que el código aplica, tomados del capítulo 5 de la tesis:
 
@@ -43,6 +48,19 @@ Criterios que el código aplica, tomados del capítulo 5 de la tesis:
 - La supervisión captura cada 10 minutos a 800 por 600 píxeles. Una posible falla se confirma con una segunda consulta a resolución completa antes de pausar la impresora.
 - El bot atiende solo al identificador del operador autorizado. Las órdenes de rutina se reconocen por palabras clave sin llamar al modelo.
 - En esta implementación, la imagen sale de la cámara integrada de la A1 mini (puerto 6000) en lugar de la ESP32-CAM del diseño. El microcontrolador de la secuencia de remoción está simulado con los mismos tiempos máximos.
+
+## Panel de administración
+
+```
+cd implementacion/panel
+npx wrangler d1 create tfc02-panel-db          (y copia su identificador en wrangler.toml)
+npx wrangler r2 bucket create tfc02-panel-capturas
+npx wrangler d1 execute tfc02-panel-db --remote --file=schema.sql
+npx wrangler deploy
+npx wrangler secret put ADMIN_USUARIO          (y ADMIN_HASH, SESION_CLAVE, EQUIPO_CLAVE)
+```
+
+`ADMIN_HASH` tiene la forma `pbkdf2_sha256$100000$sal$resumen` (Base64) y se calcula fuera del worker: la contraseña nunca se guarda en claro. `EQUIPO_CLAVE` es el mismo valor que `PANEL_CLAVE` en el `.env` del orquestador, que envía sus filas pendientes cada 30 s y marca como pendiente lo que no pudo subir.
 
 ## Guiones de cálculo, planos y electrónica
 

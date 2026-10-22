@@ -1,0 +1,20 @@
+# Pagina de administracion del sistema (seccion 5.5.2 de la tesis).
+# Secretos, que se cargan con `wrangler secret put` y nunca van en este archivo:
+#   ADMIN_USUARIO, ADMIN_HASH (PBKDF2 con sal), SESION_CLAVE, EQUIPO_CLAVE
+name = "tfc02-panel"
+main = "src/index.js"
+compatibility_date = "2026-10-01"
+workers_dev = true
+
+[[d1_databases]]
+binding = "DB"
+database_name = "tfc02-panel-db"
+database_id = "cea97b48-9df5-43e7-8e56-3964333e9bbc"
+
+[[r2_buckets]]
+binding = "IMAGENES"
+bucket_name = "tfc02-panel-capturas"
+
+# Tarea diaria que borra los eventos y las capturas que exceden su plazo.
+[triggers]
+crons = ["0 9 * * *"]

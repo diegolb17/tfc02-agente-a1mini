@@ -400,7 +400,7 @@ def mec_1_01(codigo, nombre, titulo):
     return lam
 
 
-_subconjunto('MEC-1-02', 'SUBCONJUNTO DE LA BANDEJA', (5, 6, 7, 8, 11, 12, 13, 14), (1, -1, -0.7), 0.5, iso_centro=(135, 190), tabla_pos=(248, 128), notas_pos=(248, 215),
+_subconjunto('MEC-1-02', 'SUBCONJUNTO DE LA BANDEJA', (5, 6, 7, 8, 11, 12, 13, 14), (1, -1, -0.7), 0.5, iso_centro=(135, 190), tabla_pos=(248, 128), notas_pos=(228, 215),
              notas=['La bandeja apoya sobre la mesa y recibe la estructura; las rejillas cierran la admisión frontal.',
               'El soporte del actuador va en la esquina frontal izquierda, bajo la plataforma, y aloja el actuador lineal.',
               'La bandeja posterior derecha lleva la ventana del módulo de entrada de red X1 (ELE-0-01).',

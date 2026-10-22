@@ -1,0 +1,34 @@
+Consultas reales a gpt-5.4-mini con las imagenes de prueba, 2026-10-22 17:22
+Modelo: gpt-5.4-mini; esfuerzo de razonamiento: low; precios: 0.75 y 4.5 USD por millon de tokens de entrada y salida.
+Las imagenes son dibujos esquematicos generados por pruebas/generar_imagenes_prueba.py, no capturas de la camara: los aciertos no miden el desempeno de la vision; los tokens, la latencia y el costo si son reales.
+
+Detalle por consulta:
+ 1 | supervision  | espagueti        | 800x600   | esperado falla   | falla    0.98 | acierto si | entrada   816 | salida   86 (razonamiento 36) | 1.31 s | 0.999 milesimas de USD
+ 2 | supervision  | espagueti        | 800x600   | esperado falla   | falla    0.98 | acierto si | entrada   816 | salida   84 (razonamiento 29) | 1.42 s | 0.990 milesimas de USD
+ 3 | supervision  | espagueti        | 800x600   | esperado falla   | falla    0.97 | acierto si | entrada   816 | salida   90 (razonamiento 38) | 1.19 s | 1.017 milesimas de USD
+ 4 | supervision  | pieza_presente   | 800x600   | esperado normal  | normal   0.96 | acierto si | entrada   816 | salida   84 (razonamiento 25) | 1.22 s | 0.990 milesimas de USD
+ 5 | supervision  | pieza_presente   | 800x600   | esperado normal  | normal   0.94 | acierto si | entrada   816 | salida   94 (razonamiento 33) | 1.30 s | 1.035 milesimas de USD
+ 6 | supervision  | pieza_presente   | 800x600   | esperado normal  | normal   0.93 | acierto si | entrada   816 | salida   75 (razonamiento 19) | 1.24 s | 0.950 milesimas de USD
+ 7 | supervision  | plataforma_vacia | 800x600   | esperado normal  | normal   0.88 | acierto si | entrada   816 | salida   91 (razonamiento 37) | 1.29 s | 1.022 milesimas de USD
+ 8 | supervision  | objeto_ajeno     | 800x600   | esperado normal  | normal   0.94 | acierto si | entrada   816 | salida   92 (razonamiento 32) | 1.77 s | 1.026 milesimas de USD
+ 9 | fin          | pieza_presente   | 1600x1200 | esperado pieza   | pieza    0.99 | acierto si | entrada  4840 | salida   85 (razonamiento 25) | 1.78 s | 4.012 milesimas de USD
+10 | fin          | pieza_presente   | 1600x1200 | esperado pieza   | pieza    0.99 | acierto si | entrada  4840 | salida   91 (razonamiento 29) | 1.87 s | 4.039 milesimas de USD
+11 | fin          | pieza_presente   | 1600x1200 | esperado pieza   | pieza    0.99 | acierto si | entrada  4840 | salida   75 (razonamiento 17) | 1.59 s | 3.967 milesimas de USD
+12 | fin          | objeto_ajeno     | 1600x1200 | esperado anomala | pieza    0.96 | acierto no | entrada  4840 | salida  119 (razonamiento 55) | 1.60 s | 4.165 milesimas de USD
+13 | fin          | objeto_ajeno     | 1600x1200 | esperado anomala | pieza    0.91 | acierto no | entrada  4840 | salida  130 (razonamiento 52) | 1.88 s | 4.215 milesimas de USD
+14 | fin          | plataforma_vacia | 1600x1200 | esperado libre   | libre    0.98 | acierto si | entrada  4840 | salida   82 (razonamiento 34) | 1.30 s | 3.999 milesimas de USD
+15 | verificacion | plataforma_vacia | 1600x1200 | esperado libre   | libre    0.96 | acierto si | entrada  4818 | salida   72 (razonamiento 26) | 1.81 s | 3.938 milesimas de USD
+16 | verificacion | plataforma_vacia | 1600x1200 | esperado libre   | libre    0.98 | acierto si | entrada  4818 | salida   64 (razonamiento 21) | 1.76 s | 3.901 milesimas de USD
+17 | verificacion | plataforma_vacia | 1600x1200 | esperado libre   | libre    0.97 | acierto si | entrada  4818 | salida   70 (razonamiento 22) | 2.73 s | 3.928 milesimas de USD
+18 | verificacion | pieza_presente   | 1600x1200 | esperado pieza   | pieza    0.99 | acierto si | entrada  4818 | salida   75 (razonamiento 24) | 1.67 s | 3.951 milesimas de USD
+19 | verificacion | pieza_presente   | 1600x1200 | esperado pieza   | pieza    0.99 | acierto si | entrada  4818 | salida   87 (razonamiento 34) | 1.64 s | 4.005 milesimas de USD
+20 | verificacion | pieza_presente   | 1600x1200 | esperado pieza   | pieza    0.99 | acierto si | entrada  4818 | salida   92 (razonamiento 35) | 1.77 s | 4.027 milesimas de USD
+
+Resumen por tipo de consulta:
+supervision: 8 consultas; base sin imagen 199 tokens; tokens por imagen medidos 617 frente a 570 calculados; entrada media 816; salida media 87; latencia media 1.34 s (maxima 1.77); costo medio 1.004 milesimas de USD; aciertos 8 de 8
+fin: 6 consultas; base sin imagen 229 tokens; tokens por imagen medidos 2306 frente a 2280 calculados; entrada media 4840; salida media 97; latencia media 1.67 s (maxima 1.88); costo medio 4.066 milesimas de USD; aciertos 4 de 6
+verificacion: 6 consultas; base sin imagen 210 tokens; tokens por imagen medidos 2304 frente a 2280 calculados; entrada media 4818; salida media 77; latencia media 1.90 s (maxima 2.73); costo medio 3.959 milesimas de USD; aciertos 6 de 6
+
+Latencia de las 20 consultas: media 1.61 s, mediana 1.62 s, maxima 2.73 s.
+Detalle bajo (detail=low) en supervision: 729 tokens de entrada frente a 816 con el detalle por defecto.
+Gasto total de la prueba, incluidas las consultas sin imagen: 0.0575 USD (tope 0.28).

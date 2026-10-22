@@ -18,13 +18,14 @@ from .config import RAIZ, guardar_en_env, leer_config
 from .impresora import ImpresoraMQTT, ImpresoraSimulada
 from .microcontrolador import MicrocontroladorSimulado
 from .orquestador import Orquestador
+from .panel import Panel
 from .registro import Registro
 from .servidor_funciones import Funciones, crear_servidor
 from .telegram_bot import Telegram, TelegramConsola
 
 
 def construir(config, simular=False, simular_modelo=False, consola=False, guion=None,
-              escala=60.0, registrar_operador=False, base_datos=None):
+              escala=60.0, registrar_operador=False, base_datos=None, descargar_config=True):
     """Arma el sistema; con simular=True no toca ni la impresora ni la camara."""
     if simular:
         impresora = ImpresoraSimulada(escala=escala)
@@ -54,9 +55,12 @@ def construir(config, simular=False, simular_modelo=False, consola=False, guion=
                           lambda a, m: sistema.orquestador._solicitar(a, m))
     servidor = crear_servidor(funciones)
     agente = (AgenteSimulado(servidor=servidor) if (simular or simular_modelo)
-              else Agente(config.modelo, servidor))
+              else Agente(config.modelo, servidor, config.openai_api_key))
     sistema.micro, sistema.funciones, sistema.servidor, sistema.agente = micro, funciones, servidor, agente
     sistema.orquestador = Orquestador(config, impresora, camara, telegram, registro, micro, agente, funciones)
+    if config.panel_url and config.panel_clave:
+        sistema.orquestador.panel = Panel(config.panel_url, config.panel_clave, registro, config.referencia,
+                                          config, descargar_config=descargar_config)
     return sistema
 
 
@@ -93,6 +97,7 @@ def main(argv=None) -> None:
         sistema.telegram.identidad().get("username"), config.operador_id or "sin registrar",
         "simulada" if a.simular else config.impresora_ip,
         "simulado" if (a.simular or a.simular_modelo) else config.modelo)
+    logging.getLogger("principal").info("Panel: %s", config.panel_url or "sin configurar")
     try:
         sistema.orquestador.ejecutar(a.duracion)
     except KeyboardInterrupt:

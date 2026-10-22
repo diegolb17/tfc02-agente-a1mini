@@ -83,6 +83,20 @@ class Registro:
                 "SELECT tipo, detalle FROM eventos WHERE trabajo IS ? ORDER BY instante DESC LIMIT ?",
                 (self.trabajo_actual, n)).fetchall()[::-1]
 
+    def pendientes(self, tabla: str, limite: int = 200) -> list[dict]:
+        """Filas aun no aceptadas por el panel (pendientes de envio)."""
+        with self._cerrojo:
+            cursor = self.con.execute(f"SELECT * FROM {tabla} WHERE enviado=0 LIMIT ?", (limite,))
+            nombres = [c[0] for c in cursor.description]
+            return [dict(zip(nombres, fila)) for fila in cursor.fetchall()]
+
+    def marcar_enviadas(self, tabla: str, ids: list[str]) -> None:
+        if not ids:
+            return
+        with self._cerrojo:
+            self.con.executemany(f"UPDATE {tabla} SET enviado=1 WHERE id=?", [(i,) for i in ids])
+            self.con.commit()
+
     def pendientes_de_envio(self) -> dict[str, int]:
         with self._cerrojo:
             return {t: self.con.execute(f"SELECT COUNT(*) FROM {t} WHERE enviado=0").fetchone()[0]

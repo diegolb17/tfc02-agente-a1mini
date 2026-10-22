@@ -99,7 +99,7 @@ def mec_1_05(codigo, nombre, titulo):
     cota(lam, va, (ACT_X, ACT_Y, ACT_PUNTA), (ACT_X, ACT_Y, z_lamina), x1 - 10, 'v', texto='%.1f' % aprox)
     cota(lam, va, (ACT_X, ACT_Y, ACT_PUNTA), (ACT_X, ACT_Y, zt), x1 - 20, 'v', texto='%.1f' % recorrido)
     cota(lam, va, (ACT_X, ACT_Y, ACT_Z), (0, ACT_Y, 0), va.rect[1] - 8, 'h', texto='15.5')
-    nota(lam, va, (ACT_X + 1.5, ACT_Y, ACT_Z - 1.5), ['TORNILLO ISO 4762 M4 x 55,', 'EJE DEL AGUJERO POSTERIOR'], -24, -20, tam=2.8)
+    nota(lam, va, (ACT_X + 1.5, ACT_Y, ACT_Z - 1.5), ['TORNILLO ISO 4762 M4 x 55,', 'EJE DEL AGUJERO POSTERIOR'], -18, -32, tam=2.8)
     nota(lam, va, s20(45, ACT_Y, 86.4), ['LÁMINA FLEXIBLE DE LA A1 MINI', '(línea de trazo y dos puntos)'], 22, -22, tam=2.8)
     nota(lam, va, (ACT_X + 3, ACT_Y, zt - 3), ['VÁSTAGO AL FINAL DE LA FLEXIÓN', '(%.0f mm sobre la lámina)' % FLEXION], 34, 10, tam=2.8)
     nota(lam, va, (ACT_X + 3, ACT_Y, ACT_PUNTA - 6), 'VÁSTAGO RECOGIDO', 40, -8, tam=2.8)

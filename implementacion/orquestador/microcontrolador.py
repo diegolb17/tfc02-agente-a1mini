@@ -11,7 +11,8 @@ import time
 
 T_SALIDA = 38.7            # grados, fin del enfriamiento (tesis, 4.2)
 T_MAX_ENFRIAMIENTO = 360   # 6 min
-T_FLEXION = 6.9            # s, carrera de 35 mm del L12-P (maximo 12 s)
+X_FLEXION = 39.4           # mm: 30 de flecha mas 9.4 de aproximacion (revision D)
+T_FLEXION = 7.8            # s, nominal de la etapa 2 con el L12-P (maximo 12 s)
 T_EVACUACION = 30.0        # s, barrido a tres cotas (maximo 60 s)
 INTENTOS = 3
 
@@ -72,13 +73,13 @@ class MicrocontroladorSimulado:
         temperatura = self.impresora.estado().get("temp_plataforma")
         if temperatura is not None and temperatura > T_SALIDA:
             return self._falla("ENFRIAMIENTO_SIN_EFECTO")
-        self.al_evento("etapa", f"enfriamiento terminado a {temperatura} grados en {t / 60:.1f} min")
+        self.al_evento("etapa", f"enfriamiento terminado a {temperatura} °C en {t / 60:.1f} min")
         for intento in range(1, INTENTOS + 1):
             self.estado = "FLEXION"
-            self.al_evento("etapa", f"2 flexion, intento {intento}: actuador a 35 mm")
+            self.al_evento("etapa", f"2 flexión, intento {intento}: actuador a {X_FLEXION} mm")
             self._dormir(T_FLEXION)
             self.estado = "EVACUACION"
-            self.al_evento("etapa", "3 evacuacion: retraccion y barrido del cabezal a tres cotas")
+            self.al_evento("etapa", "3 evacuación: retracción del actuador y barrido del cabezal a tres cotas")
             if self.al_evacuar:
                 self.al_evacuar()
             self._dormir(T_EVACUACION)

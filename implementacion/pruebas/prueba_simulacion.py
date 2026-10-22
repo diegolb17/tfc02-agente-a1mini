@@ -38,14 +38,16 @@ def operador(decisiones: dict):
 
 
 def escenario(nombre, umbral, escenas_impresion, escenas_intento, decisiones, mensajes=(), referencia=True,
-              sin_ciclo=False):
+              sin_ciclo=False, panel_url="", panel_clave=""):
     config = Config(umbral_confianza=umbral, periodo_supervision=10.0, plazo_confirmacion=30.0,
                     recordatorio_pausa=15.0, carpeta_datos=DATOS / nombre,
-                    referencia=DATOS / nombre / "referencia_plataforma_vacia.jpg")
+                    referencia=DATOS / nombre / "referencia_plataforma_vacia.jpg",
+                    panel_url=panel_url, panel_clave=panel_clave)
     config.carpeta_datos.mkdir(parents=True, exist_ok=True)
     config.referencia.unlink(missing_ok=True)
+    (config.carpeta_datos / "registro.sqlite").unlink(missing_ok=True)
     s = construir(config, simular=True, consola=True, guion=operador(decisiones),
-                  base_datos=config.carpeta_datos / "registro.sqlite")
+                  base_datos=config.carpeta_datos / "registro.sqlite", descargar_config=False)
     s.impresora.duracion_min = 12.0
     o, cam = s.orquestador, s.camara
     hilo = threading.Thread(target=o.ejecutar, daemon=True)
@@ -106,9 +108,9 @@ ESCENARIOS = [
 
 ESPERADO = {
     "A_umbral_maximo": ("retirada", 1),
-    "B_falla_y_reintento": ("retirada", 2),
+    "B_falla_y_reintento": ("fallida", 2),
     "C_confianza_alta": ("retirada", 1),
-    "D_objeto_ajeno": (None, 0),
+    "D_objeto_ajeno": ("cancelada", 0),
 }
 
 

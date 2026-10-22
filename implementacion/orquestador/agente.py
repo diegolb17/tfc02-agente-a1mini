@@ -13,6 +13,7 @@ sin gasto. El agente no guarda memoria entre consultas (seccion 5.3.3).
 import base64
 import json
 import logging
+import time
 from dataclasses import dataclass
 
 from .camara import Captura, tokens_imagen
@@ -61,6 +62,8 @@ class Veredicto:
     valido: bool = True
     tokens_entrada: int = 0
     tokens_salida: int = 0
+    tokens_razonamiento: int = 0
+    latencia_s: float = 0.0
     error: str = ""
 
 
@@ -83,11 +86,14 @@ def _imagen(captura) -> dict:
 
 
 class Agente:
-    def __init__(self, modelo: str, servidor=None):
+    def __init__(self, modelo: str, servidor=None, api_key: str | None = None, esfuerzo: str = "low"):
         from openai import OpenAI
-        self.cliente = OpenAI()
+        # La clave de .env se pasa explicita para que no la sustituya otra del sistema.
+        self.cliente = OpenAI(api_key=api_key) if api_key else OpenAI()
         self.modelo = modelo
         self.servidor = servidor
+        # La inspeccion es una clasificacion breve: basta un esfuerzo de razonamiento bajo.
+        self.esfuerzo = esfuerzo
 
     def inspeccionar(self, tipo: str, imagenes: list, estado: dict) -> Veredicto:
         clases, pregunta = CONSULTAS[tipo]
@@ -99,14 +105,19 @@ class Agente:
         contenido = [{"type": "input_text",
                       "text": f"{pregunta}\nEstado de la impresora: {json.dumps(estado, ensure_ascii=False)}"}]
         contenido += [_imagen(i) for i in imagenes]
+        inicio = time.monotonic()
         try:
             r = self.cliente.responses.create(
                 model=self.modelo, instructions=INSTRUCCION,
                 input=[{"role": "user", "content": contenido}],
+                reasoning={"effort": self.esfuerzo},
                 text={"format": {"type": "json_schema", "name": "veredicto",
                                  "schema": esquema, "strict": True}})
             v = validar(json.loads(r.output_text), clases)
+            v.latencia_s = round(time.monotonic() - inicio, 2)
             v.tokens_entrada, v.tokens_salida = r.usage.input_tokens, r.usage.output_tokens
+            detalle = getattr(r.usage, "output_tokens_details", None)
+            v.tokens_razonamiento = getattr(detalle, "reasoning_tokens", 0) or 0
             return v
         except Exception as error:      # consulta fallida: el orquestador escala
             log.warning("Consulta %s fallida: %s", tipo, error)

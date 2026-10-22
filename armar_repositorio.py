@@ -17,7 +17,8 @@ AQUI = Path(__file__).resolve().parent
 TFC02 = AQUI.parent
 
 IGNORAR = shutil.ignore_patterns("__pycache__", "*.pyc", ".env", "datos", "datos_simulacion",
-                                 "*.log", "*.sqlite", "logs", "_respaldo*")
+                                 "*.log", "*.sqlite", "logs", "_respaldo*", "node_modules", ".wrangler",
+                                 ".dev.vars")
 
 # destino: (origen, patrones de archivos; None copia la carpeta completa)
 COPIAS = {
@@ -73,7 +74,7 @@ def escanear() -> list[str]:
         for patron, nombre in SECRETOS:
             for m in re.finditer(patron, texto):
                 hallazgos.append(f"{archivo.relative_to(AQUI)}: {nombre} ({m.group(0)[:12]}...)")
-    nombres_prohibidos = [p for p in AQUI.rglob("*") if p.name in (".env", "IDEA.md") or
+    nombres_prohibidos = [p for p in AQUI.rglob("*") if p.name in (".env", "IDEA.md", ".dev.vars") or
                           (p.suffix == ".pdf" and p.stem.lower().startswith("tesis"))]
     hallazgos += [f"{p.relative_to(AQUI)}: archivo prohibido" for p in nombres_prohibidos
                   if ".git" not in p.parts]

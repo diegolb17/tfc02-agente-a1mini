@@ -1,4 +1,4 @@
-Prueba de simulacion del orquestador, 2026-10-22 16:39
+Prueba de simulacion del orquestador, 2026-10-22 17:40
 Impresora, camara, modelo y operador simulados; tiempo acelerado 60 veces.
 
 ==============================================================================
@@ -6,48 +6,74 @@ Escenario A_umbral_maximo (umbral 1.0): Umbral al maximo (valor de la tesis mien
 Conversacion:
   [OPERADOR] /referencia
   [BOT] (foto) Guardé la referencia de la plataforma vacía (1600 x 1200).
+  [OPERADOR] estado
+  [BOT] Estado de la impresora: imprimiendo
+Trabajo: A_umbral_maximo.3mf
+Avance: 32 % (capa 38 de 120)
+Tiempo restante: 8 min
+Plataforma: 65.0 °C
+Boquilla: 220.0 °C
+Luz: apagada
+Ciclo de remoción: reposo
+  [OPERADOR] ¿la pieza se ve bien?
+  [BOT] (respuesta simulada) La impresora está imprimiendo, con 48 % de avance y la plataforma a 65.0 grados.
+  [BOT] (foto) Terminó la impresión de A_umbral_maximo.3mf. Hay una pieza gris sobre la plataforma y no se ven objetos ajenos. Mi confianza es 0.86, menor que el umbral de 1.00. ¿Inicio la remoción?  [Confirmar remoción] [Cancelar]
+  [OPERADOR] pulsa [Confirmar remoción]
+  [BOT] Confirmado: inicio el ciclo de remoción.
+  [BOT] (foto) Verificación tras la remoción: La plataforma quedó vacía, igual que la referencia. Mi confianza es 0.93, menor que el umbral de 1.00. ¿La plataforma quedó libre?  [Sí, está libre] [No, reintentar]
+  [OPERADOR] pulsa [Sí, está libre]
+  [BOT] (foto) Pieza retirada en el intento 1. El equipo está disponible.
 Consultas al modelo (tipo, resolucion, veredicto, confianza, tokens de entrada):
-  ('supervision', '800x600', 'normal', 0.9, 920)
-  ('fin de impresion', '1600x1200', 'pieza', 0.86, 4910)
-  ('verificacion, intento 1', '1600x1200', 'libre', 0.93, 4910)
+  ('supervisión', '800x600', 'normal', 0.9, 920)
+  ('fin de impresión', '1600x1200', 'pieza', 0.86, 4910)
+  ('verificación, intento 1', '1600x1200', 'libre', 0.93, 4910)
 Intervenciones del operador: [('confirmar', 1.0), ('confirmar plataforma libre', None)]
-Trabajo registrado: [('A_umbral_maximo.3mf', 'retirada', 1, 269.0), ('A_umbral_maximo.3mf', None, 0, None)]
+Trabajo registrado: [('A_umbral_maximo.3mf', 'retirada', 1, 269.0)]
 Resultado: retirada, intentos 1; esperado ('retirada', 1): CORRECTO
 ==============================================================================
 Escenario B_falla_y_reintento (umbral 0.85): Falla en la supervision: segunda consulta, pausa, aviso, el operador cancela y la remocion de la pieza fallida necesita dos intentos.
 Conversacion:
   [OPERADOR] /referencia
   [BOT] (foto) Guardé la referencia de la plataforma vacía (1600 x 1200).
+  [BOT] (foto) Falla detectada y confirmada en B_falla_y_reintento.3mf. Con la imagen completa se confirma filamento suelto y enredado: la pieza se desprendió. Pausé la impresión. ¿Qué hago?  [Reanudar] [Cancelar trabajo]
+  [OPERADOR] pulsa [Cancelar trabajo]
+  [BOT] Cancelé el trabajo con falla. Inicio el ciclo de remoción de la pieza fallida.
+  [BOT] (foto) Pieza retirada en el intento 2. El equipo está disponible.
 Consultas al modelo (tipo, resolucion, veredicto, confianza, tokens de entrada):
-  ('supervision', '800x600', 'falla', 0.82, 920)
-  ('confirmacion de falla', '1600x1200', 'falla', 0.91, 2630)
-  ('verificacion, intento 1', '1600x1200', 'pieza', 0.88, 4910)
-  ('verificacion, intento 2', '1600x1200', 'libre', 0.93, 4910)
+  ('supervisión', '800x600', 'falla', 0.82, 920)
+  ('confirmación de falla', '1600x1200', 'falla', 0.91, 2630)
+  ('verificación, intento 1', '1600x1200', 'pieza', 0.88, 4910)
+  ('verificación, intento 2', '1600x1200', 'libre', 0.93, 4910)
 Intervenciones del operador: [('cancelar', 1.0)]
-Trabajo registrado: [('B_falla_y_reintento.3mf', 'retirada', 2, 317.0), ('B_falla_y_reintento.3mf', None, 0, None)]
-Resultado: retirada, intentos 2; esperado ('retirada', 2): CORRECTO
+Trabajo registrado: [('B_falla_y_reintento.3mf', 'fallida', 2, 319.0)]
+Resultado: fallida, intentos 2; esperado ('fallida', 2): CORRECTO
 ==============================================================================
 Escenario C_confianza_alta (umbral 0.85): Umbral ya calibrado en 0.85: con confianza 0.86 el ciclo empieza sin preguntar.
 Conversacion:
   [OPERADOR] /referencia
   [BOT] (foto) Guardé la referencia de la plataforma vacía (1600 x 1200).
+  [BOT] (foto) Terminó la impresión de C_confianza_alta.3mf. Hay una pieza gris sobre la plataforma y no se ven objetos ajenos. Confianza 0.86: inicio el ciclo de remoción.
+  [BOT] (foto) Pieza retirada en el intento 1. El equipo está disponible.
 Consultas al modelo (tipo, resolucion, veredicto, confianza, tokens de entrada):
-  ('supervision', '800x600', 'normal', 0.9, 920)
-  ('fin de impresion', '1600x1200', 'pieza', 0.86, 4910)
-  ('verificacion, intento 1', '1600x1200', 'libre', 0.93, 4910)
+  ('supervisión', '800x600', 'normal', 0.9, 920)
+  ('fin de impresión', '1600x1200', 'pieza', 0.86, 4910)
+  ('verificación, intento 1', '1600x1200', 'libre', 0.93, 4910)
 Intervenciones del operador: []
-Trabajo registrado: [('C_confianza_alta.3mf', 'retirada', 1, 228.0), ('C_confianza_alta.3mf', None, 0, None)]
+Trabajo registrado: [('C_confianza_alta.3mf', 'retirada', 1, 229.0)]
 Resultado: retirada, intentos 1; esperado ('retirada', 1): CORRECTO
 ==============================================================================
 Escenario D_objeto_ajeno (umbral 0.85): Escena anomala al terminar: el orquestador pide confirmacion y el operador cancela.
 Conversacion:
   [OPERADOR] /referencia
   [BOT] (foto) Guardé la referencia de la plataforma vacía (1600 x 1200).
+  [BOT] (foto) Terminó la impresión de D_objeto_ajeno.3mf, pero veo algo inesperado: Además de la pieza hay un objeto ajeno sobre la plataforma. No inicio la remoción sin tu confirmación.  [Confirmar remoción] [Cancelar]
+  [OPERADOR] pulsa [Cancelar]
+  [BOT] Entendido, no inicio la remoción. La pieza queda en la plataforma.
 Consultas al modelo (tipo, resolucion, veredicto, confianza, tokens de entrada):
-  ('supervision', '800x600', 'normal', 0.9, 920)
-  ('fin de impresion', '1600x1200', 'anomala', 0.74, 4910)
+  ('supervisión', '800x600', 'normal', 0.9, 920)
+  ('fin de impresión', '1600x1200', 'anomala', 0.74, 4910)
 Intervenciones del operador: [('cancelar', 1.0)]
-Trabajo registrado: [('D_objeto_ajeno.3mf', None, 0, None), ('D_objeto_ajeno.3mf', None, 0, None)]
-Resultado: None, intentos 0; esperado (None, 0): CORRECTO
+Trabajo registrado: [('D_objeto_ajeno.3mf', 'cancelada', 0, None)]
+Resultado: cancelada, intentos 0; esperado ('cancelada', 0): CORRECTO
 ==============================================================================
 Todos los escenarios correctos.

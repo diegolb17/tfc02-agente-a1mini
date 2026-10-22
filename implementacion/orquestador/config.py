@@ -12,7 +12,8 @@ RUTA_ENV = RAIZ / ".env"
 
 
 def cargar_env(ruta: Path = RUTA_ENV) -> None:
-    """Carga pares CLAVE=valor sin pisar variables ya definidas en el entorno."""
+    """Carga pares CLAVE=valor. Un valor no vacio de .env prevalece sobre el entorno
+    del sistema: la maquina puede tener otra OPENAI_API_KEY de otros proyectos."""
     if not ruta.exists():
         return
     for linea in ruta.read_text(encoding="utf-8").splitlines():
@@ -20,7 +21,11 @@ def cargar_env(ruta: Path = RUTA_ENV) -> None:
         if not linea or linea.startswith("#") or "=" not in linea:
             continue
         clave, valor = linea.split("=", 1)
-        os.environ.setdefault(clave.strip(), valor.strip().strip('"').strip("'"))
+        valor = valor.strip().strip('"').strip("'")
+        if valor:
+            os.environ[clave.strip()] = valor
+        else:
+            os.environ.setdefault(clave.strip(), valor)
 
 
 def guardar_en_env(clave: str, valor: str, ruta: Path = RUTA_ENV) -> None:
@@ -58,8 +63,9 @@ class Config:
     impresora_ip: str = ""
     serie: str = ""
     codigo_acceso: str = ""
-    # Modelo adoptado en la seccion 5.3.1.
+    # Modelo adoptado en la seccion 5.3.1; la clave se pasa explicita al cliente.
     modelo: str = "gpt-5.4-mini"
+    openai_api_key: str = ""
     # El umbral arranca al maximo hasta fijarlo con el conjunto de prueba:
     # con 1.0 el sistema pide siempre la confirmacion del operador (R-SEG-01).
     umbral_confianza: float = 1.0
@@ -89,6 +95,7 @@ def leer_config() -> Config:
         serie=os.environ.get("IMPRESORA_SERIE", ""),
         codigo_acceso=os.environ.get("IMPRESORA_CODIGO_ACCESO", ""),
         modelo=os.environ.get("MODELO", "gpt-5.4-mini"),
+        openai_api_key=os.environ.get("OPENAI_API_KEY", ""),
         umbral_confianza=_real("UMBRAL_CONFIANZA", 1.0),
         umbral_falla=_real("UMBRAL_FALLA", 0.5),
         periodo_supervision=_real("PERIODO_SUPERVISION_S", 600.0),
