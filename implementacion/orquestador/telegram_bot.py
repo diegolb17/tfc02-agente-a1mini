@@ -35,8 +35,12 @@ class Telegram:
 
     def _llamar(self, metodo: str, archivos=None, espera: float = 30, **datos) -> dict:
         datos = {k: v for k, v in datos.items() if v is not None}
-        r = requests.post(self.url + metodo, data=datos, files=archivos, timeout=espera)
-        respuesta = r.json()
+        try:
+            r = requests.post(self.url + metodo, data=datos, files=archivos, timeout=espera)
+            respuesta = r.json()
+        except (requests.RequestException, ValueError) as error:
+            # Las excepciones de requests traen la URL con el token: se relanzan sin ella.
+            raise ConnectionError(f"Telegram {metodo}: {str(error).replace(self._token, '***')}") from None
         if not respuesta.get("ok"):
             raise RuntimeError(f"Telegram {metodo}: {respuesta.get('description')}")
         return respuesta["result"]
@@ -100,8 +104,7 @@ class Telegram:
                                          offset=desplazamiento,
                                          allowed_updates=json.dumps(["message", "callback_query"]))
             except Exception as error:      # red caida: se reintenta sin detener el sistema
-                # Las excepciones de requests traen la URL con el token: se oculta antes de registrar.
-                log.warning("getUpdates fallo: %s", str(error).replace(self._token, "***"))
+                log.warning("getUpdates fallo: %s", error)
                 time.sleep(5)
                 continue
             for novedad in novedades:

@@ -212,6 +212,9 @@ class Orquestador:
             self.f.ciclo.remocion_autorizada = True
             self.telegram.enviar_foto(captura.jpeg, M.fin_confianza_alta(archivo, v.descripcion, v.confianza))
             self.f.iniciar_remocion()
+        elif v.valido and v.clase == "libre":
+            self._solicitar("iniciar_remocion", M.fin_libre_dudoso(archivo, v.descripcion, v.confianza, umbral),
+                            texto_directo=True)
         elif v.valido and v.clase == "anomala":
             self._solicitar("iniciar_remocion", M.fin_anomalia(archivo, v.descripcion), texto_directo=True)
         elif v.valido:

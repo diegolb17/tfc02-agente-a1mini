@@ -63,6 +63,12 @@ def fin_confirmar(archivo, descripcion, confianza, umbral) -> str:
             f"¿Inicio la remoción?")
 
 
+def fin_libre_dudoso(archivo, descripcion, confianza, umbral) -> str:
+    return (f"Terminó la impresión de {archivo or 'la pieza'}. {descripcion} Mi confianza es "
+            f"{confianza:.2f}, menor que el umbral de {umbral:.2f}. Si en la foto ves una pieza, "
+            f"confirma la remoción; si la plataforma está libre, cancela.")
+
+
 def fin_anomalia(archivo, descripcion) -> str:
     return (f"Terminó la impresión de {archivo or 'la pieza'}, pero veo algo inesperado: "
             f"{descripcion} No inicio la remoción sin tu confirmación.")

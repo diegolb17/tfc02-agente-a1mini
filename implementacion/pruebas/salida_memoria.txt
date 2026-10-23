@@ -1,0 +1,4 @@
+Orquestador en modo simulado con consola, 60 s, 63 muestras
+Memoria residente: media 83.6 MB, maxima 85.8 MB
+Procesador (un nucleo = 100 %): media 1.8 %, maximo 53.1 %
+Python 3.14.2 en win32

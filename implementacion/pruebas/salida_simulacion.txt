@@ -1,4 +1,4 @@
-Prueba de simulacion del orquestador, 2026-10-22 17:40
+Prueba de simulacion del orquestador, 2026-10-22 19:28
 Impresora, camara, modelo y operador simulados; tiempo acelerado 60 veces.
 
 ==============================================================================
@@ -28,7 +28,7 @@ Consultas al modelo (tipo, resolucion, veredicto, confianza, tokens de entrada):
   ('fin de impresión', '1600x1200', 'pieza', 0.86, 4910)
   ('verificación, intento 1', '1600x1200', 'libre', 0.93, 4910)
 Intervenciones del operador: [('confirmar', 1.0), ('confirmar plataforma libre', None)]
-Trabajo registrado: [('A_umbral_maximo.3mf', 'retirada', 1, 269.0)]
+Trabajo registrado: [('A_umbral_maximo.3mf', 'retirada', 1, 270.0)]
 Resultado: retirada, intentos 1; esperado ('retirada', 1): CORRECTO
 ==============================================================================
 Escenario B_falla_y_reintento (umbral 0.85): Falla en la supervision: segunda consulta, pausa, aviso, el operador cancela y la remocion de la pieza fallida necesita dos intentos.

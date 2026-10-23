@@ -46,6 +46,8 @@ def main() -> int:
     base.unlink(missing_ok=True)
     s = construir(config, simular=True, base_datos=base, descargar_config=False)
     s.micro.al_evacuar = lambda: setattr(s.camara, "escena", "plataforma_vacia")
+    s.impresora.al_cambiar_estado(
+        lambda n, a: setattr(s.camara, "escena", "pieza_presente") if (a, n) == ("PAUSE", "RUNNING") else None)
     hilo = threading.Thread(target=s.orquestador.ejecutar, args=(2400,), daemon=True)
     hilo.start()
     s.telegram.enviar(AVISO)
@@ -54,16 +56,19 @@ def main() -> int:
     s.orquestador.cola.put(("mensaje", "/referencia", time.time()))
     time.sleep(4)
     s.camara.escena = "espagueti"
-    s.impresora.iniciar_impresion("pieza_soporte_camara.3mf")
+    s.impresora.iniciar_impresion("simulacion_soporte_camara.3mf")
     while hilo.is_alive() and cerrados(base) < 1:
         time.sleep(1)
     time.sleep(5)
     s.camara.escena = "pieza_presente"
-    s.impresora.iniciar_impresion("pieza_bandeja_frontal.3mf")
+    s.impresora.iniciar_impresion("simulacion_bandeja_frontal.3mf")
     while hilo.is_alive() and cerrados(base) < 2:
         time.sleep(1)
     time.sleep(3)
-    s.telegram.enviar("Fin de la simulación de prueba. Gracias.")
+    try:
+        s.telegram.enviar("Fin de la simulación de prueba. Gracias.")
+    except ConnectionError as error:
+        logging.warning("No se envio el cierre: %s", error)
     s.orquestador.detener()
     return 0
 

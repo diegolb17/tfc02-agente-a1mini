@@ -90,6 +90,8 @@ def main(argv=None) -> None:
     if a.simular:
         # La pieza simulada sale de la plataforma al evacuar, para que la verificacion la vea libre.
         sistema.micro.al_evacuar = lambda: setattr(sistema.camara, "escena", "plataforma_vacia")
+        sistema.impresora.al_cambiar_estado(
+            lambda n, a: setattr(sistema.camara, "escena", "pieza_presente") if (a, n) == ("PAUSE", "RUNNING") else None)
         if a.imprimir_prueba:
             sistema.impresora.iniciar_impresion()
     logging.getLogger("principal").info(
