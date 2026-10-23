@@ -17,7 +17,7 @@
 % columna del microcontrolador
 \node[term] (A)  at (0,0)      {Orden de la unidad de procesamiento: inicio de la etapa 1};
 \node[proc] (B)  at (0,-1.45)  {D27 a 100\,\% (25 kHz): ventilador a 24 V permanente; temporizador $t = 0$};
-\node[dec, text width=1.75cm] (C) at (0,-3.35) {¿Pulsos del tacómetro (D4) a los 5 s? (P)};
+\node[dec, text width=1.75cm] (C) at (0,-3.35) {¿Pulsos del tacómetro (D4) a los 5 s?};
 \node[proc] (D)  at (0,-5.25)  {Recibe por UART la temperatura de la plataforma, $T$};
 \node[dec]  (E)  at (0,-7.0)   {¿$T \leq$ 38.7 °C?};
 \node[dec, text width=1.5cm]  (F)  at (0,-9.0)   {¿$t \geq$ 6 min?};
@@ -50,7 +50,7 @@
 
 % columna de la unidad de procesamiento
 \node[proc, text width=3.3cm] (P1) at (9.3,-4.0) {\textbf{Unidad de procesamiento}: lee la temperatura de la plataforma que publica la impresora (MQTT, red local)};
-\node[proc, text width=3.3cm] (P2) at (9.3,-6.1) {La reenvía al microcontrolador por UART, cada 2 s (P)};
+\node[proc, text width=3.3cm] (P2) at (9.3,-6.1) {La reenvía al microcontrolador por UART, cada 2 s};
 \draw[fl] (P1) -- (P2);
 \draw[fl] (P2.west) -- (5.9,-6.1) -- (5.9,-5.25) -- (D.east);
 \node[nota, text width=3.3cm] at (9.3,-8.3) {Si se cae la red, el dato deja de llegar y la etapa termina por los 6 min.};

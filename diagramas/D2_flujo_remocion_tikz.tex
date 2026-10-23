@@ -17,36 +17,35 @@
 \begin{document}
 \begin{tikzpicture}[base]
 % ======================= parte 1: preparación =======================
+% 22 oct 2026: la consulta al agente y, si la confianza es baja, la autorización del usuario se hacen al terminar
+% la impresión y antes del enfriamiento, como en el pseudocódigo, la Tabla de interfaz y la implementación parcial.
 \node[term] (A)  at (3.0,0)     {Fin de impresión\\(estado por red local)};
-\node[dec]  (B)  at (3.0,-1.75) {¿T > 38.7 °C?};
-\node[proc] (C)  at (3.0,-3.45) {\textbf{Etapa 1}\\ventilador principal al 100\,\% por modulación (D27), nominal 2.9 min};
-\node[dec]  (C1) at (3.0,-5.35) {¿T $\leq$ 38.7 °C? (impresora)};
-\node[falla, text width=1.9cm] (FT) at (6.85,-7.5) {Falla del enfriamiento: ventilador sin efecto};
-\node[dec, text width=1.7cm]  (E)  at (3.0,-8.1) {¿Pieza presente? (captura)};
-\node[term, text width=1.6cm] (L0) at (-0.6,-8.1) {Placa libre: fin sin flexión};
-\node[dec, text width=1.6cm]  (CF) at (3.0,-10.45) {¿Confianza del agente alta?};
-\node[dec, text width=1.6cm]  (G)  at (3.0,-12.75) {¿Autoriza el usuario? (R-SEG-01)};
-\node[con]  (X1) at (3.0,-14.75) {1};
-\node[falla, text width=1.9cm] (H1) at (6.85,-14.75) {Espera de intervención humana};
+\node[dec, text width=1.7cm]  (E)  at (3.0,-1.95) {¿Pieza presente? (captura)};
+\node[term, text width=1.6cm] (L0) at (-0.6,-1.95) {Placa libre: fin sin flexión};
+\node[dec, text width=1.6cm]  (CF) at (3.0,-4.3) {¿Confianza del agente alta?};
+\node[dec, text width=1.6cm]  (G)  at (3.0,-6.6) {¿Autoriza el usuario? (R-SEG-01)};
+\node[falla, text width=1.9cm] (H1) at (6.85,-6.6) {Espera de intervención humana};
+\node[dec]  (B)  at (3.0,-9.1) {¿T > 38.7 °C?};
+\node[proc] (C)  at (3.0,-10.8) {\textbf{Etapa 1}\\ventilador principal al 100\,\% por modulación (D27), nominal 3.3 min};
+\node[dec]  (C1) at (3.0,-12.7) {¿T $\leq$ 38.7 °C? (impresora)};
+\node[falla, text width=1.9cm] (FT) at (6.85,-14.35) {Falla del enfriamiento: aviso al usuario};
+\node[con]  (X1) at (3.0,-14.95) {1};
 
-\draw[fl] (A) -- (B);
-\draw[fl] (B) -- node[et, right=1pt] {sí} (C);
-\draw[fl] (C) -- (C1);
-\draw[fl] (C1.west) -- (1.25,-5.35) -- node[et, left=1pt, align=right, pos=0.5] {no, antes\\de 6 min} (1.25,-3.45) -- (C.west);
-\draw[fl] (C1.east) -- node[et, above=2pt, align=center, pos=0.45] {no, pasados 6 min,\\o sin giro (P)} (6.85,-5.35) -- (FT.north);
-\draw[fl] (C1) -- node[et, right=1pt, pos=0.3, align=left] {sí, o sin dato\\y 6 min cumplidos} (E);
-\draw[ln] (B.west) -- node[et, above=2pt, pos=0.6] {no} (-0.6,-1.75) -- (-0.6,-7.0);
-\draw[fl] (-0.6,-7.0) -- (3.0,-7.0);
-\node[union] at (3.0,-7.0) {};
+\draw[fl] (A) -- (E);
 \draw[fl] (E.west) -- node[et, above=2pt, pos=0.5] {no} (L0.east);
 \draw[fl] (E) -- node[et, right=1pt] {sí} (CF);
 \draw[fl] (CF) -- node[et, right=1pt] {no} (G);
-\draw[ln] (CF.west) -- node[et, above=2pt, pos=0.5] {sí} (0.0,-10.45) -- (0.0,-14.05) -- (3.0,-14.05);
-\node[union] at (3.0,-14.05) {};
-\draw[fl] (G) -- node[et, right=1pt, pos=0.35] {sí} (X1);
-\draw[fl] (FT) -- (H1);
-\draw[ln] (G.east) -- node[et, above=2pt, align=center, pos=0.42] {no, o 30 min\\sin respuesta (P)} (6.85,-12.75);
-\node[union] at (6.85,-12.75) {};
+\draw[ln] (CF.west) -- node[et, above=2pt, pos=0.5] {sí} (0.0,-4.3) -- (0.0,-7.9) -- (3.0,-7.9);
+\node[union] at (3.0,-7.9) {};
+\draw[fl] (G) -- node[et, right=1pt, pos=0.35] {sí} (B);
+\draw[fl] (G.east) -- node[et, above=2pt, align=center, pos=0.5] {no, o 30 min\\sin respuesta} (H1.west);
+\draw[fl] (B) -- node[et, right=1pt] {sí} (C);
+\draw[fl] (C) -- (C1);
+\draw[fl] (C1.west) -- (1.25,-12.7) -- node[et, left=1pt, align=right, pos=0.5] {no, antes\\de 6 min} (1.25,-10.8) -- (C.west);
+\draw[fl] (C1.east) -- node[et, above=2pt, align=center, pos=0.45] {no, pasados 6 min,\\o sin giro} (6.85,-12.7) -- (FT.north);
+\draw[fl] (C1) -- node[et, right=1pt, pos=0.3, align=left] {sí, o sin dato\\y 6 min cumplidos} (X1);
+\draw[ln] (B.west) -- node[et, above=2pt, pos=0.6] {no} (-0.6,-9.1) -- (-0.6,-14.25) -- (3.0,-14.25);
+\node[union] at (3.0,-14.25) {};
 
 \draw[marco] (-1.75,1.0) rectangle (8.1,-15.5);
 \node[tmarco] at (-1.65,0.95) {Parte 1: preparación};
@@ -62,7 +61,7 @@
 \node[dec]  (K1) at (12.9,-11.65) {¿Placa libre?};
 \node[term] (OK) at (12.9,-13.45) {Aviso al usuario: equipo disponible};
 \node[dec, text width=1.35cm] (R) at (9.85,-11.65) {¿Intento $<$ 3?};
-\node[term, text width=1.9cm, dashed] (SRT) at (15.75,-9.95) {Estado Sin red (P) del diagrama de estados};
+\node[term, text width=1.9cm, dashed] (SRT) at (15.75,-9.95) {Estado Sin red del diagrama de estados};
 \node[falla, text width=1.9cm] (H2) at (15.75,-13.45) {Espera de intervención humana};
 
 \draw[fl] (X2) -- (I);

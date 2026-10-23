@@ -20,7 +20,7 @@
 \node[proc] (D) at (3.0,-5.2) {Consulta al modelo de visión (API de OpenAI): captura y previsualización reducidas a 800 por 600};
 \node[dec, text width=1.75cm]  (E) at (3.0,-7.1) {¿El modelo informa falla? (umbral por fijar)};
 \node[negra] (H) at (3.0,-9.05) {Segunda consulta, imagen completa, para confirmar la falla};
-\node[propp, text width=2.3cm] (S) at (6.35,-9.05) {Sigue sin supervisión, aviso al volver la red (P)};
+\node[propp, text width=2.3cm] (S) at (6.35,-9.05) {Sigue sin supervisión, aviso al volver la red};
 \node[dec]  (I) at (3.0,-10.75) {¿Falla confirmada?};
 \node[con]  (X1) at (3.0,-12.35) {2};
 
@@ -46,14 +46,14 @@
 
 % ======================= parte 2: respuesta a la falla =======================
 \node[con]  (X2) at (12.2,0)    {2};
-\node[proc] (J)  at (12.2,-1.3) {Pausa de la impresora por red local (P)};
+\node[proc] (J)  at (12.2,-1.3) {Pausa de la impresora por red local};
 \node[proc] (K)  at (12.2,-2.75) {Aviso por Telegram: foto, descripción y botones};
 \node[dec]  (L)  at (12.2,-4.4) {Decisión del usuario};
 \node[proc, text width=2.35cm] (M) at (9.75,-6.35) {Reanudar la impresión (confirmación explícita)};
 \node[term, text width=2.35cm] (R1) at (9.75,-8.05) {Vuelve a la captura (parte 1)};
 \node[proc, text width=2.35cm] (N) at (12.4,-6.35) {Cancelar el trabajo: remoción de pieza fallida};
 \node[term, text width=2.35cm] (G2) at (12.4,-8.05) {Ciclo de remoción: etapas 1 a 4};
-\node[propp, text width=2.2cm] (O) at (15.0,-6.35) {Mantener la pausa y recordar cada 15 min (P)};
+\node[propp, text width=2.2cm] (O) at (15.0,-6.35) {Mantener la pausa y recordar cada 15 min};
 
 \draw[fl] (X2) -- (J);
 \draw[fl] (J) -- (K);
