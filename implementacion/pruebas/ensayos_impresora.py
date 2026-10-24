@@ -48,7 +48,7 @@ RECORTE_CAMA = (180, 560, 1240, 1080)
 def main() -> int:
     c = leer_config()
     out = [f"Ensayos con la Bambu Lab A1 mini real, {time.strftime('%Y-%m-%d %H:%M')}",
-           f"Impresora en {c.impresora_ip}; numero de serie y codigo de acceso leidos de .env (no se registran)."]
+           "Impresora en la red local; IP, numero de serie y codigo de acceso leidos de .env (no se registran)."]
     imp = ImpresoraMQTT(c.impresora_ip, c.serie, c.codigo_acceso)
     t0 = time.monotonic()
     imp.conectar()

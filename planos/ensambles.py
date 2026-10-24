@@ -4,7 +4,7 @@ coordenadas del ensamble, globos de posición y lista de piezas."""
 import math
 import numpy as np
 from laminas import (lamina, Pieza, Lamina, Vista, cota, nota, titulo_vista, globo, tabla, iso,
-                     primer_diedro, _datos, X, Y, Z, FECHA, REVISION)
+                     primer_diedro, _datos, X, Y, Z, FECHA, REVISION, revision_de)
 from motor.malla import rasgos, transform_ensamble
 
 # posición, componente, denominación, plano
@@ -160,8 +160,10 @@ def escala_que_cabe(pz, dir_iso, zona, margen):
 
 
 def _ensamble_datos(codigo, titulo, escala):
-    return {'titulo': titulo, 'codigo': codigo, 'escala': escala, 'formato': 'A3', 'fecha': FECHA,
-            'material': 'VARIOS', 'tolerancia': 'ISO 2768-m', 'rugosidad': 'Ra 12.5', 'revision': REVISION}
+    rev, fecha, nota_rev = revision_de(codigo)
+    return {'titulo': titulo, 'codigo': codigo, 'escala': escala, 'formato': 'A3', 'fecha': fecha,
+            'material': 'VARIOS', 'tolerancia': 'ISO 2768-m', 'rugosidad': 'Ra 12.5', 'revision': rev,
+            'nota_revision': nota_rev}
 
 
 # -----------------------------------------------------------------------------
@@ -261,10 +263,10 @@ def mec_0_02(codigo, nombre, titulo):
     titulo_vista(lam, (zona[0] + zona[2]) / 2, 34, 'ISOMÉTRICA EXPLOSIONADA DEL CONJUNTO (sin el equipo)', esc)
     filas, total = filas_bom(items)
     filas.append(('', 'MASA TOTAL DE FABRICACIÓN PROPIA', '', '', '%.0f' % total, ''))
-    y_top = lista_piezas(lam, 248, 70, filas, alto=4.8)
+    y_top = lista_piezas(lam, 248, 78, filas, alto=4.45)   # 24 oct: sobre el recuadro de la revisión E
     # componentes comerciales, sobre la lista de piezas
     col = [('POS', 10, 'c'), ('COMPONENTE COMERCIAL', 108, 'l'), ('CANT', 12, 'c'), ('OBSERVACIÓN', 30, 'c')]
-    alto_c = 3.85     # 22 oct: la tornillería con longitud añadió dos filas; con 4.15 la lista tocaba el marco superior
+    alto_c = 3.7      # 24 oct: 24 filas y la lista sube sobre el recuadro de revisión; con 3.85 tocaba el marco superior
     base_c = y_top + 9
     lam.texto(248, base_c + alto_c * (len(COMPONENTES_COMERCIALES) + 1) + 2, 'COMPONENTES COMERCIALES (no se fabrican)', 2.6, 0, 'l', negrita=True)
     tabla(lam, 248, base_c, col, COMPONENTES_COMERCIALES, alto=alto_c, tam=2.8)

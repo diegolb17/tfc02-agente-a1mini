@@ -19,6 +19,24 @@ SALIDA = os.path.join(AQUI, 'laminas')
 FECHA = '22.10.2026'
 REVISION = 'D'          # D: interfaz con la impresora, tornillería con longitud y eje del actuador (22 oct 2026)
 #                        C: alojamientos del actuador, extractor de 30 mm y cuello del aro (21 oct 2026)
+# Revisión por lámina: las que cambian después de la D llevan su letra, su fecha y su nota (recuadro sobre el cajetín).
+REVISIONES = {
+    'MEC-0-02': ('E', '24.10.2026', 'prisioneros en tres filas (cuatro en total), soporte del actuador al cuarto MEC-2-02, '
+                 '24 componentes comerciales.'),
+    'MEC-1-01': ('E', '24.10.2026', 'nota de fijación del soporte del actuador a la cara frontal del cuarto MEC-2-02.'),
+    'MEC-1-02': ('E', '24.10.2026', 'soporte y tapa del actuador fuera del subconjunto (van en la estructura); nota del extractor.'),
+    'MEC-1-05': ('E', '24.10.2026', 'nota de fijación del soporte a la cara frontal de MEC-2-02, sin apoyo en la bandeja.'),
+    'MEC-2-15': ('E', '24.10.2026', 'prisionero designado ISO 4029 M3 x 4.'),
+    'MEC-2-17': ('E', '24.10.2026', 'prisioneros: uno M3 x 4 en la abrazadera y uno M3 x 5 en la copa (antes, "2 prisioneros").'),
+    'MEC-2-18': ('E', '24.10.2026', 'prisionero designado ISO 4029 M3 x 3 autorroscante.'),
+}
+
+
+def revision_de(codigo):
+    """(letra, fecha, nota o None) de la lámina."""
+    if codigo in REVISIONES:
+        return REVISIONES[codigo]
+    return REVISION, FECHA, None
 X, Y, Z = np.eye(3)
 
 NOTAS_FDM = [
@@ -34,9 +52,10 @@ def _nombre_salida(codigo, pieza):
 
 def _datos(codigo, titulo, escala, pieza, material=None):
     r = rasgos(pieza)
-    return {'titulo': titulo, 'codigo': codigo, 'escala': escala, 'formato': 'A3', 'fecha': FECHA,
+    rev, fecha, nota_rev = revision_de(codigo)
+    return {'titulo': titulo, 'codigo': codigo, 'escala': escala, 'formato': 'A3', 'fecha': fecha,
             'material': material or r['material'], 'masa': '%.1f g' % r['masa_g'],
-            'tolerancia': 'ISO 2768-m', 'rugosidad': 'Ra 12.5', 'revision': REVISION}
+            'tolerancia': 'ISO 2768-m', 'rugosidad': 'Ra 12.5', 'revision': rev, 'nota_revision': nota_rev}
 
 
 REGISTRO = {}

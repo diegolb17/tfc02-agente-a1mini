@@ -177,7 +177,30 @@ def estampar(page, datos, marca_de_agua=True, notas=None, notas_pos=None):
     _txt(page, fitz.Rect(r2b.x0, r2b.y0, r2b.x1, r2b.y0 + h4 * 0.45), 'LÁMINA:', t * 0.65, alinear=0)
     _txt(page, fitz.Rect(r2b.x0, r2b.y0 + h4 * 0.35, r2b.x1, r2b.y1), '%s-%s' % (datos['codigo'], datos.get('formato', 'A3')), t * 1.05, True)
 
-    # bloque de notas sobre el cajetín, alineado a su borde izquierdo
+    # 24 oct 2026: recuadro con la nota de revisión, pegado sobre el cajetín y de su mismo ancho
+    hr = 0
+    nota_rev = datos.get('nota_revision')
+    if nota_rev:
+        tr = max(t * 0.9, 8.2)
+        texto_rev = 'REVISIÓN %s (%s): %s' % (datos.get('revision', 'A'), datos.get('fecha', ''), nota_rev)
+        lin, actual = [], ''
+        for w in texto_rev.split():
+            prueba = (actual + ' ' + w).strip()
+            if fitz.get_text_length(prueba, fontname=FUENTE, fontsize=tr) > cw - 3 * MM and actual:
+                lin.append(actual)
+                actual = w
+            else:
+                actual = prueba
+        lin.append(actual)
+        hr = len(lin) * tr * 1.45 + 1.6 * MM
+        rr = fitz.Rect(x0, y0 - hr, x1, y0)
+        _caja(page, rr)
+        yy = rr.y0 + 0.8 * MM + tr
+        for s in lin:
+            page.insert_text((rr.x0 + 1.5 * MM, yy), s, fontsize=tr, fontname=FUENTE)
+            yy += tr * 1.45
+
+    # bloque de notas sobre el cajetín (y sobre el recuadro de revisión), alineado a su borde izquierdo
     if notas:
         tn = max(t * 0.9, 8.2)
         lineas = []
@@ -193,7 +216,7 @@ def estampar(page, datos, marca_de_agua=True, notas=None, notas_pos=None):
             lineas.append(pref + actual)
         # la cabecera NOTAS ocupa una linea mas; sin contarla la ultima nota tocaba el borde superior del cajetin
         alto = (len(lineas) + 1) * tn * 1.45 + 1 * MM
-        rn = fitz.Rect(x0, y0 - alto - 1.5 * MM, x1, y0 - 1.5 * MM)
+        rn = fitz.Rect(x0, y0 - hr - alto - 1.5 * MM, x1, y0 - hr - 1.5 * MM)
         if notas_pos is not None:      # (x_mm, y_mm) de la esquina superior izquierda, origen abajo-izquierda
             rn = fitz.Rect(notas_pos[0] * MM, H - notas_pos[1] * MM, notas_pos[0] * MM + cw, H - notas_pos[1] * MM + alto)
         y = rn.y0 + 2 * MM + tn

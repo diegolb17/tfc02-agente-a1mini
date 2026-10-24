@@ -267,9 +267,9 @@ def mec_2_17(codigo, nombre, titulo):
         lam.linea(p.m(tuple(a3)), p.m(tuple(b3)), 'oculta')
     cota_angulo(lam, p, (0, 70, 35), (0, 86, 35), tuple(c0 + u * 16.0), 26, texto='45°')
     # --- isométrica ---
-    v_iso = iso(lam, pz, 1.0, (335, 120), dir=(-1, -1, -0.8), up=Z)
+    v_iso = iso(lam, pz, 1.0, (335, 127), dir=(-1, -1, -0.8), up=Z)     # 24 oct: sube 7 mm por el recuadro de revisión
     v_iso.dibujar(lam)
-    titulo_vista(lam, 335, 72, 'ISOMÉTRICA', '1:1')
+    titulo_vista(lam, 335, 79, 'ISOMÉTRICA', '1:1')
     notas = NOTAS_FDM + [
         'Abrazadera sobre el tubo Ø40 de MEC-2-14, bajo la horquilla de la cámara; la inmoviliza un prisionero ISO 4029 M3 x 4 en inserto M3 x 3 (Ø4.0; pared de 3.8).',
         'El agujero de la copa va a 45° de las ranuras (no sobre una ranura), a la altura del centro de la esfera (z 31).',

@@ -40,6 +40,8 @@ SECRETOS = [
     (r"\b\d{8,10}:AA[A-Za-z0-9_\-]{30,}", "token de bot de Telegram"),
     (r"(?i)api[_-]?key\s*[=:]\s*['\"]?[A-Za-z0-9_\-]{12,}", "api_key con valor"),
     (r"\bKIE\b", "referencia a KIE"),
+    # Partido en dos literales para que el propio guion no contenga el usuario.
+    (r"(?i)diego" r"luba17", "correo o usuario personal de Diego"),
 ]
 
 
@@ -64,7 +66,7 @@ def copiar() -> None:
 
 def valores_sensibles() -> dict[str, str]:
     """Valores reales de .env que nunca pueden aparecer en el repositorio publico."""
-    claves = ("TELEGRAM_TOKEN", "TELEGRAM_OPERADOR_ID", "IMPRESORA_SERIE", "IMPRESORA_CODIGO_ACCESO",
+    claves = ("TELEGRAM_TOKEN", "TELEGRAM_OPERADOR_ID", "IMPRESORA_IP", "IMPRESORA_SERIE", "IMPRESORA_CODIGO_ACCESO",
               "OPENAI_API_KEY", "PANEL_CLAVE", "PANEL_CONTRASENA")
     env = TFC02 / "IMPLEMENTACION" / ".env"
     valores = {}

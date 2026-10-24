@@ -1,5 +1,5 @@
 Ensayos con la Bambu Lab A1 mini real, 2026-10-24 17:25
-Impresora en 192.168.1.49; numero de serie y codigo de acceso leidos de .env (no se registran).
+Impresora en la red local; IP, numero de serie y codigo de acceso leidos de .env (no se registran).
 Conexion MQTT por TLS al puerto 8883: 1.00 s.
 Firmware informado por get_version: {"ota": "01.08.01.00", "esp32": "01.16.41.96", "mc": "00.00.34.17", "th": "00.01.07.73"}
 
