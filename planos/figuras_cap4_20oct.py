@@ -100,7 +100,9 @@ def fig_20():
     lam.texto(100, 60, 'Soporte y tapa del actuador lineal', T, 0, 'c', negrita=True)
     lam.texto(262, 50, 'Soporte tubular, horquillas, carcasa y aro', T, 0, 'c', negrita=True)
     nota(lam, va, (-24, 294, 30), ['Canal de 15.4 x 17.5 para', 'el cuerpo del actuador'], -20, 44, tam=T)
-    nota(lam, va, (-27, 294, 22), ['Tapa atornillada:', 'apriete por rozamiento'], -12, -62, tam=T)
+    nota(lam, va, (-27, 294, 30), ['Tapa atornillada:', 'apriete por rozamiento'], 40, 42, tam=T)
+    # 24 oct 2026: revisión D, eje M4 x 55 por el agujero posterior del actuador, con su inserto en la cara Y 324
+    nota(lam, va, (-15.5, 324, 11.8), ['Inserto del tornillo M4 x 55', 'del agujero posterior'], 16, -30, tam=T)
     nota(lam, vv, tuple(centroide('Carcasa_ESP32CAM')), ['Carcasa ESP32-CAM', 'sobre bola SØ16'], -60, 30, tam=T)
     nota(lam, vv, tuple(G['aro']), ['Aro MR16 sobre', 'bola SØ20'], 30, 28, tam=T)
     nota(lam, vv, tuple(G['soporte_base'] + 80 * G['eje_tubo']), ['Tubo Ø40/Ø34 x 165', 'sobre placa de 10'], 50, -36, tam=T)
@@ -128,19 +130,60 @@ def fig_22():
 
 
 def fig_23():
-    """Bandeja de la electronica con las rejillas de admision al frente y el soporte del actuador."""
+    """Bandeja de la electronica con las rejillas de admision al frente y el extractor de 30 mm (revision D).
+    24 oct 2026: el soporte del actuador sale de la figura, porque se atornilla a la estructura (MEC-2-02) y no a la
+    bandeja; en su lugar se senala el extractor de la pared posterior, que en la version del 21 oct aun tenia 36 mm."""
     nombres = ['Bandeja_frontal_derecha', 'Bandeja_frontal_izquierda', 'Bandeja_posterior_derecha',
-               'Bandeja_posterior_izquierda', 'Rejilla_frontal_derecha', 'Rejilla_frontal_izquierda',
-               'Soporte_actuador', 'Tapa_actuador']
+               'Bandeja_posterior_izquierda', 'Rejilla_frontal_derecha', 'Rejilla_frontal_izquierda']
     pz = conjunto(nombres)
     lam = Lamina('A3')
     v = Vista(pz, (1, -1, -0.9), Z, 0.52, ocultas=False, nombre='iso', res=0.08).colocar_centro(218, 150)
     v.dibujar(lam)
     nota(lam, v, tuple(centroide('Rejilla_frontal_derecha')), ['Rejillas de admisión', 'al frente'], 24, -40, tam=T)
-    nota(lam, v, tuple(centroide('Bandeja_posterior_izquierda')), ['Bandeja en cuatro cuartos,', 'unidos con tornillos M4'], -22, 46, tam=T)
-    nota(lam, v, tuple(centroide('Soporte_actuador')), 'Soporte del actuador', -50, -30, tam=T)
+    nota(lam, v, tuple(centroide('Bandeja_frontal_izquierda')), ['Bandeja en cuatro cuartos,', 'unidos con tornillos M4'], -60, -52, tam=T)
+    nota(lam, v, (320.2, 280, -5), ['Extractor de 30 mm', 'en la pared posterior'], -26, 34, tam=T)
     nota(lam, v, tuple(centroide('Bandeja_posterior_derecha') + np.array([60, 0, 0])), ['Ventana del módulo', 'de entrada de red'], 50, 30, tam=T)
     guardar(lam, 'fig_cap4_23')
+
+
+def fig_15():
+    """Detalle de la cavidad de alojamiento (24 oct 2026): corte por Y 290 a 2:1 de la pared de retención, con la tira
+    de neopreno, y del nervio posterior, con la base de la impresora en línea de trazo y dos puntos. La figura anterior
+    era un render del 28 sep que mostraba el módulo de enfriamiento y no la cavidad."""
+    from ensambles import s20, _fantasma
+    from motor.hoja import cota_alineada, titulo_vista
+    yA, E, R, Tl = 290.0, 2.0, 24.0, 5.0
+    lam = Lamina('A3')
+
+    def det(pieza, c3, cx, cy):
+        d = Vista(Pieza(pieza), np.array([0, 1.0, 0]), Z, E, ocultas=False, corte=((0, yA, 0), (0, 1, 0)), nombre='det', res=0.03)
+        d.recortar(c3, R)
+        d.colocar_punto(c3, x=cx, y=cy)
+        d.dibujar(lam)
+        return d
+
+    # --- frente: pared de retención y tira de neopreno de 5 mm
+    df = det('Cuna_frontal_izquierda', s20(15, yA, -4), 110, 150)
+    q = [df.m(s20(a, yA, b)) for a, b in ((12.15, -4.25), (16.85, -4.25), (16.85, -0.15), (12.15, -0.15))]
+    lam.relleno(q, gris=0.72)
+    _fantasma(lam, df, [s20(17, yA, 7), s20(17, yA, -5), s20(26, yA, -5)])
+    cota_alineada(lam, df, s20(21, yA, -5), s20(21, yA, 0), -6, texto='5')
+    cota_alineada(lam, df, s20(17.5, yA, -9), s20(17.5, yA, -5), 5, texto='4')
+    cota_alineada(lam, df, s20(12, yA, 0), s20(17, yA, 0), 9, texto='5')
+    nota(lam, df, s20(6, yA, -1.5), 'Pared de retención', -14, 22, tam=Tl)
+    nota(lam, df, s20(14.5, yA, -2.5), 'Tira de neopreno de 5 mm', -26, -30, tam=Tl)
+    nota(lam, df, s20(23, yA, -7.5), 'Suelo de 4 mm', 30, 2, tam=Tl)
+    titulo_vista(lam, 110, 150 - R - 10, 'Frente: pared de retención', '2:1', tam=Tl)
+
+    # --- atrás: nervio posterior
+    dr = det('Cuna_posterior_izquierda', s20(331, yA, -4), 235, 150)
+    _fantasma(lam, dr, [s20(321, yA, -5), s20(332, yA, -5), s20(332, yA, 7)])
+    cota_alineada(lam, dr, s20(327, yA, -5), s20(327, yA, 0), 5, texto='5')
+    cota_alineada(lam, dr, s20(333, yA, 0), s20(337, yA, 0), 9, texto='4')
+    nota(lam, dr, s20(335, yA, -1), 'Nervio posterior', 16, 24, tam=Tl)
+    nota(lam, dr, s20(332, yA, 5), ['Base de la impresora', '(trazo y dos puntos)'], -34, 24, tam=Tl)
+    titulo_vista(lam, 235, 150 - R - 10, 'Atrás: nervio posterior', '2:1', tam=Tl)
+    guardar(lam, 'fig_cap4_15')
 
 
 def fig_24():
@@ -179,4 +222,4 @@ def fig_despiece():
 if __name__ == '__main__':
     quien = sys.argv[1:] or ['21', '20', '22', '23', 'despiece']
     for q in quien:
-        {'21': fig_21, '20': fig_20, '22': fig_22, '23': fig_23, '24': fig_24, 'despiece': fig_despiece}[q]()
+        {'15': fig_15, '21': fig_21, '20': fig_20, '22': fig_22, '23': fig_23, '24': fig_24, 'despiece': fig_despiece}[q]()

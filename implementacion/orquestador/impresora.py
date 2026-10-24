@@ -31,6 +31,10 @@ class ImpresoraBase:
         self._cerrojo = threading.Lock()
         self._al_cambiar = []          # funciones f(nuevo, anterior)
         self.luz_encendida = False
+        self.luz_reportada = None          # lo que dice el propio equipo en lights_report
+        self.instante_luz = 0.0
+        self.ultimo_reporte: dict = {}     # ultimo mensaje de estado tal como llego
+        self.instante_reporte = 0.0
         self.ultima_respuesta: dict = {}
 
     def al_cambiar_estado(self, funcion) -> None:
@@ -59,7 +63,8 @@ class ImpresoraBase:
         if "lights_report" in parcial:
             for luz in parcial["lights_report"]:
                 if luz.get("node") == "chamber_light":
-                    self.luz_encendida = luz.get("mode") == "on"
+                    self.luz_encendida = self.luz_reportada = luz.get("mode") == "on"
+                    self.instante_luz = time.time()
         if nuevo and nuevo != anterior:
             for funcion in self._al_cambiar:
                 funcion(nuevo, anterior)
@@ -124,6 +129,7 @@ class ImpresoraMQTT(ImpresoraBase):
             if not isinstance(parte, dict):
                 continue
             if seccion == "print":
+                self.ultimo_reporte, self.instante_reporte = dict(parte), time.time()
                 self._fundir(parte)
             if seccion == "info" and parte.get("command") == "get_version":
                 self.version = {m.get("name"): m.get("sw_ver") for m in parte.get("module", [])}

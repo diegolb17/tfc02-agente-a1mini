@@ -231,16 +231,18 @@ COMPONENTES_COMERCIALES = [
     (30, 'ISO 4762 M4 x 60, tuerca ISO 4032 y arandela ISO 7089 (ventilador)', 4, 'apriete 50'),
     (31, 'ISO 4762 M4 x 25: uniones entre cuartos y soporte del ventilador', 18, 'apriete 15 a 18'),
     (32, 'ISO 4762 M4 x 12: estructura a bandeja y tapa del actuador', 12, 'apriete 4.3 a 5.5'),
-    (33, 'ISO 4762 M4 x 30: soporte del actuador a la estructura', 4, 'apriete 24'),
+    (33, 'ISO 4762 M4 x 30: soporte del actuador al cuarto MEC-2-02', 4, 'apriete 24'),
     (34, 'ISO 4762 M4 x 55: eje del agujero posterior del actuador', 1, 'MEC-1-05'),
     (35, 'ISO 4762 M3 x 16: soporte de la cámara, a insertos M3 x 4', 4, 'apriete 10'),
     (36, 'ISO 7380-1 M3 x 8: rejillas de admisión, a insertos M3 x 4', 4, 'apriete 4'),
     (37, 'ISO 7045 M3 x 20 con tuerca ISO 4032: extractor', 4, 'pared 4 + 10'),
-    (38, 'Prisionero ISO 4029 M3: 2 de 4 mm (tubo) y 1 de 5 mm (copa)', 3, 'rótulas'),
-    (39, 'Prisionero ISO 4029 M3 x 3 autorroscante (aro, piloto Ø2.5)', 1, 'pared 2.7'),
-    (40, 'Pasador ISO 2338 Ø5 m6 x 28 (alineación entre cuartos)', 16, 'agujeros 30'),
-    (41, 'Almohadilla de neopreno 60 Shore A, Ø25 x 5, adhesiva', 8, 'bajo la bandeja'),
-    (42, 'Lámina de neopreno 60 Shore A de 5 mm: tiras 195 x 5 y 315 x 5', 1, 'cavidad'),
+    # prisioneros: 4 en total, uno por horquilla sobre el tubo, uno en la copa de la lámpara y uno en el aro
+    (38, 'Prisionero ISO 4029 M3 x 4: horquillas al tubo (uno cada una)', 2, 'pared 3.8'),
+    (39, 'Prisionero ISO 4029 M3 x 5: copa de la rótula de la lámpara', 1, 'pared 4.85'),
+    (40, 'Prisionero ISO 4029 M3 x 3 autorroscante (aro, piloto Ø2.5)', 1, 'pared 2.7'),
+    (41, 'Pasador ISO 2338 Ø5 m6 x 28 (alineación entre cuartos)', 16, 'agujeros 30'),
+    (42, 'Almohadilla de neopreno 60 Shore A, Ø25 x 5, adhesiva', 8, 'bajo la bandeja'),
+    (43, 'Lámina de neopreno 60 Shore A de 5 mm: tiras 195 x 5 y 315 x 5', 1, 'cavidad'),
 ]
 
 
@@ -395,14 +397,19 @@ def mec_1_01(codigo, nombre, titulo):
              'Cavidad de la impresora: 321 x 201 entre la pared de retención, el nervio posterior y las paredes '
              'laterales; suelo 5 mm bajo el borde, de 4 mm, sobre cinco tabiques verticales.',
              'La base de la A1 mini (315 x 195) queda a 5 mm de la pared de retención y de la pared izquierda, '
-             'huecos que ocupan tiras de neopreno de 5 mm (MEC-0-02), y a 1 mm del nervio y de la pared derecha.']
+             'huecos que ocupan tiras de neopreno de 5 mm (MEC-0-02), y a 1 mm del nervio y de la pared derecha.',
+             'El soporte del actuador se atornilla a la cara frontal del cuarto MEC-2-02 con 4 tornillos ISO 4762 M4 x 30 '
+             'sobre insertos M4 x 10 de ese cuarto (MEC-1-05).']
     lam.estampar(_ensamble_datos(codigo, titulo, esc), notas, notas_pos=(228, 244))
     return lam
 
 
-_subconjunto('MEC-1-02', 'SUBCONJUNTO DE LA BANDEJA', (5, 6, 7, 8, 11, 12, 13, 14), (1, -1, -0.7), 0.5, iso_centro=(135, 190), tabla_pos=(248, 128), notas_pos=(228, 215),
+# 24 oct 2026: el soporte del actuador se atornilla a la cara frontal del cuarto MEC-2-02 (insertos de la cuna), no a la
+# bandeja; sale de este subconjunto y se detalla en MEC-1-05
+_subconjunto('MEC-1-02', 'SUBCONJUNTO DE LA BANDEJA', (5, 6, 7, 8, 11, 12), (1, -1, -0.7), 0.5, iso_centro=(135, 190), tabla_pos=(248, 128), notas_pos=(228, 215),
              notas=['La bandeja apoya sobre la mesa y recibe la estructura; las rejillas cierran la admisión frontal.',
-              'El soporte del actuador va en la esquina frontal izquierda, bajo la plataforma, y aloja el actuador lineal.',
+              'El soporte del actuador no pertenece a la bandeja: se atornilla a la cara frontal del cuarto MEC-2-02 (MEC-1-05).',
+              'Extractor de 30 x 30 x 10 en la pared posterior de la bandeja posterior izquierda (MEC-2-08).',
               'La bandeja posterior derecha lleva la ventana del módulo de entrada de red X1 (ELE-0-01).',
               'Ocho almohadillas de neopreno Ø25 x 5 bajo la bandeja (MEC-0-02): cuatro en las esquinas y cuatro en el '
               'centro de los lados, con el centro a 20 mm de los bordes.'])

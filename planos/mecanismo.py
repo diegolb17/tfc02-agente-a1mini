@@ -140,7 +140,7 @@ def mec_1_05(codigo, nombre, titulo):
              (23, 'Actuador lineal Actuonix L12-50-210-12-P (envolvente)', 1, 'comercial'),
              (28, 'Inserto roscado de latón M4 x 10', 5, '4 tapa, 1 eje'),
              (32, 'Tornillo ISO 4762 M4 x 12 (tapa)', 4, 'apriete 5.5'),
-             (33, 'Tornillo ISO 4762 M4 x 30 (soporte a MEC-2-02)', 4, 'apriete 24'),
+             (33, 'Tornillo ISO 4762 M4 x 30 (soporte a la cara frontal de MEC-2-02)', 4, 'apriete 24'),
              (34, 'Tornillo ISO 4762 M4 x 55 (eje del agujero posterior)', 1, 'apriete 49')]
     base = 132
     tabla(lam, 248, base, col, filas, alto=5.0, tam=2.8)
@@ -150,6 +150,8 @@ def mec_1_05(codigo, nombre, titulo):
              'Recogido, el vástago queda %.1f mm bajo la lámina flexible; la flexión de %.0f mm lleva el recorrido a %.1f '
              'mm de los 50 de carrera.' % (aprox, FLEXION, recorrido),
              'Actuador representado por su envolvente simplificada (Actuonix, hoja de datos, p. 4). La lámina de la '
-             'impresora, en línea de trazo y dos puntos, no forma parte del sistema.']
+             'impresora, en línea de trazo y dos puntos, no forma parte del sistema.',
+             'El soporte se atornilla a la cara frontal del cuarto frontal izquierdo de la estructura (MEC-2-02), sobre sus '
+             'insertos a Z 18 y Z 34; no apoya en la bandeja.']
     lam.estampar(_ensamble_datos(codigo, titulo, '1:1'), notas)
     return lam

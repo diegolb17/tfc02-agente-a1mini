@@ -18,7 +18,7 @@ TFC02 = AQUI.parent
 
 IGNORAR = shutil.ignore_patterns("__pycache__", "*.pyc", ".env", "datos", "datos_simulacion",
                                  "*.log", "*.sqlite", "logs", "_respaldo*", "node_modules", ".wrangler",
-                                 ".dev.vars")
+                                 ".dev.vars", "capturas_reales", "camara_real*", "calibracion")
 
 # destino: (origen, patrones de archivos; None copia la carpeta completa)
 COPIAS = {
@@ -62,15 +62,35 @@ def copiar() -> None:
         print(f"{destino}: {sum(1 for p in objetivo.rglob('*') if p.is_file())} archivos")
 
 
+def valores_sensibles() -> dict[str, str]:
+    """Valores reales de .env que nunca pueden aparecer en el repositorio publico."""
+    claves = ("TELEGRAM_TOKEN", "TELEGRAM_OPERADOR_ID", "IMPRESORA_SERIE", "IMPRESORA_CODIGO_ACCESO",
+              "OPENAI_API_KEY", "PANEL_CLAVE", "PANEL_CONTRASENA")
+    env = TFC02 / "IMPLEMENTACION" / ".env"
+    valores = {}
+    if env.exists():
+        for linea in env.read_text(encoding="utf-8").splitlines():
+            if "=" in linea and not linea.startswith("#"):
+                k, v = linea.split("=", 1)
+                if k.strip() in claves and len(v.strip()) >= 6:
+                    valores[k.strip()] = v.strip()
+    return valores
+
+
 def escanear() -> list[str]:
     hallazgos = []
+    sensibles = valores_sensibles()
     for archivo in AQUI.rglob("*"):
         if not archivo.is_file() or ".git" in archivo.parts or archivo.name == "armar_repositorio.py":
             continue
         try:
             texto = archivo.read_text(encoding="utf-8", errors="ignore")
+            crudo = archivo.read_bytes()
         except OSError:
             continue
+        for nombre, valor in sensibles.items():
+            if valor.encode() in crudo:
+                hallazgos.append(f"{archivo.relative_to(AQUI)}: valor de {nombre} de .env")
         for patron, nombre in SECRETOS:
             for m in re.finditer(patron, texto):
                 hallazgos.append(f"{archivo.relative_to(AQUI)}: {nombre} ({m.group(0)[:12]}...)")

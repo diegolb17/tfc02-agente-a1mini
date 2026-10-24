@@ -1,0 +1,8 @@
+Ensayo L12, 2026-10-24 17:31: enlace de OpenAI y del panel invalidos solo en este proceso.
+Fase de corte, 22 s: avisos de perdida 1; filas pendientes de envio {'trabajos': 1, 'eventos': 3, 'capturas': 2, 'intervenciones': 0}; acciones fisicas ninguna.
+Fase de recuperacion: aviso de recuperacion y cola vacia en 13.5 s; filas pendientes {'trabajos': 0, 'eventos': 0, 'capturas': 0, 'intervenciones': 0}; acciones fisicas ninguna.
+Conversacion en consola:
+  [BOT] No hay conexión con el modelo de lenguaje: la impresión sigue sin supervisión. Te aviso cuando vuelva la red.
+  [BOT] Volvió la conexión con el modelo: la supervisión continúa.
+Eventos 'sin red' registrados: 1; detalle: Connection error.
+Criterio (aviso de perdida y de recuperacion, sin accion fisica): cumple.

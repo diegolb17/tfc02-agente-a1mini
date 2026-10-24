@@ -24,7 +24,7 @@ from orquestador.config import leer_config   # noqa: E402
 
 PRECIO_ENTRADA, PRECIO_SALIDA = 0.75, 4.50     # USD por millon de tokens (Tabla 19)
 TOPE_USD = 0.28
-IMAGENES = RAIZ / "pruebas" / "imagenes"
+IMAGENES = RAIZ / "pruebas" / "imagenes_cenital"   # las del ensayo del 22 oct
 SALIDA = RAIZ / "pruebas" / "salida_modelo_real.txt"
 
 ESPERADO = {

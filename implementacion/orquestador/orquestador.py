@@ -364,11 +364,56 @@ class Orquestador:
         else:
             self.micro.resultado_verificacion(False)
 
+    # Conjunto de calibracion del umbral (ensayo L11) ---------------------------
+    CLASES_CALIBRACION = {"libre": "plataforma libre", "pieza": "pieza presente",
+                          "falla": "falla (espaguetización o pieza desprendida)", "ajeno": "objeto ajeno o mano"}
+    META_CALIBRACION = 200
+
+    def _etiquetar(self, clase: str) -> None:
+        """Toma una captura real a resolución completa y la guarda con su etiqueta."""
+        carpeta = self.config.carpeta_datos / "calibracion"
+        if clase == "deshacer":
+            ultimas = sorted(carpeta.glob("*/*.jpg"), key=lambda r: r.stat().st_mtime)
+            if ultimas:
+                ultimas[-1].unlink()
+                self.telegram.enviar(f"Borré la última imagen ({ultimas[-1].parent.name}). {self._conteo(carpeta)}")
+            else:
+                self.telegram.enviar("No hay imágenes etiquetadas.")
+            return
+        if clase not in self.CLASES_CALIBRACION:
+            self.telegram.enviar("Uso: /etiqueta libre, /etiqueta pieza, /etiqueta falla o /etiqueta ajeno, "
+                                 "según lo que pusiste sobre la cama. /etiqueta deshacer borra la última. "
+                                 + self._conteo(carpeta))
+            return
+        luz_previa = self.impresora.luz_encendida
+        if not luz_previa:
+            self.impresora.luz(True)
+            time.sleep(1.5)
+        try:
+            captura = self.camara.capturar()
+        finally:
+            if not luz_previa:
+                self.impresora.luz(False)
+        nombre = time.strftime("%Y%m%d_%H%M%S") + ".jpg"
+        captura.guardar(carpeta / clase, nombre)
+        self.registro.evento("calibracion", f"{clase}: {nombre}")
+        self.telegram.enviar_foto(captura.jpeg, f"Guardada como {self.CLASES_CALIBRACION[clase]} "
+                                                f"({captura.ancho} x {captura.alto}). {self._conteo(carpeta)}")
+
+    def _conteo(self, carpeta) -> str:
+        n = {c: len(list((carpeta / c).glob("*.jpg"))) for c in self.CLASES_CALIBRACION}
+        total = sum(n.values())
+        return (f"Llevas: libre {n['libre']}, pieza {n['pieza']}, falla {n['falla']}, ajeno {n['ajeno']} "
+                f"({total} de {self.META_CALIBRACION}).")
+
     # Mensajes del operador ----------------------------------------------------
     def _mensaje(self, texto: str) -> None:
         clave = _normalizar(texto)
         orden = next((o for o, palabras in PALABRAS.items() if clave in palabras), None)
         self.registro.evento("mensaje del operador", texto)
+        if clave.startswith("/etiqueta") or clave.startswith("etiqueta "):
+            self._etiquetar(clave.split(maxsplit=1)[1].strip() if " " in clave else "")
+            return
         if clave in ("/simular_impresion", "/simular_falla") and hasattr(self.impresora, "iniciar_impresion"):
             # Solo con la impresora simulada: recorre el ciclo completo desde Telegram.
             self.camara.escena = "espagueti" if clave == "/simular_falla" else "pieza_presente"

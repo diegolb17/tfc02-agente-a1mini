@@ -14,6 +14,7 @@ AYUDA = (
     "/reanudar: reanuda la impresión pausada\n"
     "/luz: enciende o apaga la luz de la cámara\n"
     "/referencia: guarda la foto de la plataforma vacía\n"
+    "/etiqueta libre, pieza, falla o ajeno: guarda una captura para calibrar el umbral\n"
     "/ayuda: este mensaje\n\n"
     "También puedes escribir estado, foto, pausa, reanuda, luz o detén todo. "
     "Cualquier otra pregunta la responde el agente."

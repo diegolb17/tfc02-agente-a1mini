@@ -1,4 +1,4 @@
-Prueba de simulacion del orquestador, 2026-10-22 20:14
+Prueba de simulacion del orquestador, 2026-10-24 17:34
 Impresora, camara, modelo y operador simulados; tiempo acelerado 60 veces.
 
 ==============================================================================
@@ -16,7 +16,7 @@ Boquilla: 220.0 °C
 Luz: apagada
 Ciclo de remoción: reposo
   [OPERADOR] ¿la pieza se ve bien?
-  [BOT] (respuesta simulada) La impresora está imprimiendo, con 49 % de avance y la plataforma a 65.0 grados.
+  [BOT] (respuesta simulada) La impresora está imprimiendo, con 48 % de avance y la plataforma a 65.0 grados.
   [BOT] (foto) Terminó la impresión de A_umbral_maximo.3mf. Hay una pieza gris sobre la plataforma y no se ven objetos ajenos. Mi confianza es 0.86, menor que el umbral de 1.00. ¿Inicio la remoción?  [Confirmar remoción] [Cancelar]
   [OPERADOR] pulsa [Confirmar remoción]
   [BOT] Confirmado: inicio el ciclo de remoción.
@@ -45,7 +45,7 @@ Consultas al modelo (tipo, resolucion, veredicto, confianza, tokens de entrada):
   ('verificación, intento 1', '1600x1200', 'pieza', 0.88, 4910)
   ('verificación, intento 2', '1600x1200', 'libre', 0.93, 4910)
 Intervenciones del operador: [('cancelar', 1.0)]
-Trabajo registrado: [('B_falla_y_reintento.3mf', 'fallida', 2, 321.0)]
+Trabajo registrado: [('B_falla_y_reintento.3mf', 'fallida', 2, 319.0)]
 Resultado: fallida, intentos 2; esperado ('fallida', 2): CORRECTO
 ==============================================================================
 Escenario C_confianza_alta (umbral 0.85): Umbral ya calibrado en 0.85: con confianza 0.86 el ciclo empieza sin preguntar.

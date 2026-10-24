@@ -145,7 +145,7 @@ def mec_2_15(codigo, nombre, titulo):
     v_iso.dibujar(lam)
     titulo_vista(lam, 320, 150, 'ISOMÉTRICA', '1.5:1')
     notas = NOTAS_FDM + [
-        'Se cala sobre el tubo Ø40 del soporte MEC-2-14; un prisionero M3 sobre inserto M3 x 3 (agujero Ø4.0; la pared mide 3.8) la inmoviliza.',
+        'Se cala sobre el tubo Ø40 del soporte MEC-2-14; un prisionero ISO 4029 M3 x 4 sobre inserto M3 x 3 (agujero Ø4.0; la pared mide 3.8) la inmoviliza.',
         'La bola Ø16 de la carcasa MEC-2-16 entra a presión por la boca Ø14.8; las 4 ranuras dan la elasticidad.',
         'Orientación de impresión: base del collarín sobre la cama, copa hacia arriba, sin soportes.',
     ]
@@ -271,11 +271,10 @@ def mec_2_17(codigo, nombre, titulo):
     v_iso.dibujar(lam)
     titulo_vista(lam, 335, 72, 'ISOMÉTRICA', '1:1')
     notas = NOTAS_FDM + [
-        'Abrazadera sobre el tubo Ø40 de MEC-2-14, bajo la horquilla de la cámara; 2 prisioneros M3 en insertos M3 x 3 (Ø4.0; la pared mide 3.8).',
+        'Abrazadera sobre el tubo Ø40 de MEC-2-14, bajo la horquilla de la cámara; la inmoviliza un prisionero ISO 4029 M3 x 4 en inserto M3 x 3 (Ø4.0; pared de 3.8).',
         'El agujero de la copa va a 45° de las ranuras (no sobre una ranura), a la altura del centro de la esfera (z 31).',
-        'La bola SØ20 del aro MEC-2-18 entra a presión por la boca Ø18.7; el prisionero de la copa la inmoviliza.',
-        'Orientación de impresión: base de la abrazadera sobre la cama, copa hacia arriba; el brazo queda 2 mm sobre',
-        'la cama y lleva soporte debajo.',
+        'La bola SØ20 del aro MEC-2-18 entra a presión por la boca Ø18.7; la inmoviliza un segundo prisionero, ISO 4029 M3 x 5 en inserto M3 x 3 (Ø4.0; pared de 4.85).',
+        'Orientación de impresión: base de la abrazadera sobre la cama, copa hacia arriba; el brazo queda 2 mm sobre la cama y lleva soporte debajo.',
     ]
     lam.estampar(_datos(codigo, titulo, '2:1', nombre), notas, notas_pos=(14, 60))
     return lam
@@ -317,7 +316,7 @@ def mec_2_18(codigo, nombre, titulo):
     v_iso.dibujar(lam)
     titulo_vista(lam, 330, 125, 'ISOMÉTRICA', '1.5:1')
     notas = NOTAS_FDM + [
-        'Aloja un dicroico LED MR16 (Ø50, GU5.3, 12 V, 6 W); un prisionero M3 autorroscante en el piloto Ø2.5 lo retiene.',
+        'Aloja un dicroico LED MR16 (Ø50, GU5.3, 12 V, 6 W); un prisionero ISO 4029 M3 x 3 autorroscante en el piloto Ø2.5 lo retiene.',
         'La bola SØ20 entra a presión en la copa de la horquilla MEC-2-17 y permite orientar el haz.',
         'Orientación de impresión: aro apoyado de canto con la bola hacia abajo, con soportes bajo la bola.',
     ]

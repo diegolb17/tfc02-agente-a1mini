@@ -1,0 +1,8 @@
+Consultas reales a gpt-5.4-mini con imagenes de la camara integrada de la A1 mini, 2026-10-24 17:27
+Imagen original de la camara: 1680 x 1080 px. Fase de la impresora: IDLE.
+Base sin imagen: supervision 237 tokens, verificacion 248 tokens.
+supervision 1: 800 x 514 px; veredicto normal 0.97; entrada 794 (imagen 557, calculado 510); salida 101; 1.87 s; 1.050 milesimas de USD; Veo la impresora en reposo, sin impresión en curso. La cama está vacía y no se aprecia pieza desprendida, espaguetización ni filamento acumulado en la boquilla.
+supervision 2: 800 x 514 px; veredicto normal 0.97; entrada 794 (imagen 557, calculado 510); salida 103; 2.54 s; 1.059 milesimas de USD; Veo la cama vacía y la impresora en reposo. No se aprecia pieza desprendida, espaguetización ni filamento acumulado en la boquilla.
+supervision 3: 800 x 514 px; veredicto normal 0.97; entrada 794 (imagen 557, calculado 510); salida 140; 2.91 s; 1.226 milesimas de USD; Veo la cama vacía y la impresora en reposo. No hay pieza desprendida, no hay espaguetización ni filamento acumulado en la boquilla visibles.
+verificacion: referencia y captura de 1600 x 1029 px; veredicto libre 0.96; entrada 4256 (imagen 2004 por imagen, calculado 1980); salida 73; 1.95 s; 3.521 milesimas de USD; Veo la plataforma sin pieza ni restos visibles; coincide con la referencia de vacía.
+Gasto total: 0.0074 USD (tope 0.05).

@@ -20,8 +20,9 @@ sys.path.insert(0, str(RAIZ))
 from orquestador.config import leer_config     # noqa: E402
 from orquestador.principal import construir     # noqa: E402
 
-AVISO = ("Simulación de prueba para la tesis. La impresora, la cámara y el modelo son simulados; "
-         "los mensajes y los botones son los reales del sistema. Verás dos impresiones de unos 20 s: "
+AVISO = ("Simulación de prueba para la tesis. La impresora, la cámara y el modelo son simulados; las "
+         "imágenes reproducen la vista de la cámara del diseño y los mensajes y los botones son los reales "
+         "del sistema. Verás dos impresiones de unos 20 s: "
          "la primera con una falla y la segunda normal. Responde con los botones cuando aparezcan.")
 
 
