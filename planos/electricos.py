@@ -387,6 +387,8 @@ def ele_0_01():
         'S2 corta +24V_ACT: ventilador principal, U1 (12 V), actuador y dicroico. Quedan vivos U2, A1:U4, A2, A3 y M3.',
         'Liberar S2 no rearranca el ciclo: el reinicio exige una orden deliberada (ISO 13850).',
         'F2 es provisional hasta contrastar su curva con la irrupción de T1. Toda la placa trabaja a 24 V o menos.',
+        'T1 se ajusta a 24.0 V antes del montaje y su potenciómetro se precinta: llega a 28.8 V y U2 admite 28 V.',
+        'A2 se alimenta por su conector de expansión desde el riel de 5.1 V de U2, sin la protección de su conector propio.',
         'Hilos W1 a W26: sección, color y terminación en ELE-0-02.',
     ]
     lam.estampar(datos('ELE-0-01', 'ESQUEMA ELÉCTRICO GENERAL', 'S/E'), notas=notas, notas_pos=(14, 64))
